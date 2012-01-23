@@ -63,7 +63,7 @@ Prime.prototype = {
 	while(ptr != this.np.head){
 	    var b = ptr.data.countTest();
 	    flag = flag || b;
-	    b = ptr.data.elementSizeTest();
+	    b = TechElementSize.apply(this.n, this, ptr.data);
 	    flag = flag || b;
 	    b = ptr.data.doubleNormalizerTest();
 	    flag = flag || b;
@@ -71,9 +71,9 @@ Prime.prototype = {
 	    flag = flag || b;
 	    b = ptr.data.largeIntersectionAbelianTest();
 	    flag = flag || b;
-	    b = ptr.data.largeIntersectionTest();
+	    b = TechLI.apply(this.n, this, ptr.data);
 	    flag = flag || b;
-	    b = ptr.data.dPTest();
+	    b = TechDP.apply(this.n, this, ptr.data);
 	    flag = flag || b;
 
 	    ptr = ptr.next;
@@ -95,18 +95,19 @@ Prime.prototype = {
     showProof: function(){
 	var pf = "";
 
+	/*
 	//okay, for now, just dump everything and don't even worry about the order
 	var ptr = this.np.head.next;
 	while(ptr != this.np.head){
-	    pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+	pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
 
-	    ptr = ptr.next;
+	ptr = ptr.next;
 	}
 
 	return pf;
-    }
-};
-	/*
+	}
+	};
+	/*/
 
 	var pf = "";
 
@@ -143,4 +144,4 @@ Prime.prototype = {
 	}
 
     }
-    */
+};

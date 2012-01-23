@@ -211,13 +211,13 @@ Num.prototype = {
 	    ptr = ptr.next;
 	}
 	
-	var flag = true;
-	while(flag){
+	//var flag = true;
+	//while(flag){
 	    flag = false;
 	    ptr = this.primes.head.prev;
 	    while(ptr != this.primes.head){
 		var b = ptr.data.prove();
-		alert(ptr.data.p + "**" + b)
+		//alert(ptr.data.p + "**" + b)
 		flag = flag || b;
 
 		if(ptr.data.proofComplete){
@@ -227,7 +227,7 @@ Num.prototype = {
 		ptr = ptr.prev;
 	    }
 
-	}
+	//}
 
     },
 
