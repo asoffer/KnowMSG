@@ -171,6 +171,9 @@ Num.prototype = {
 	    ptr = ptr.next;
 	}
 
+	if(TechTwoOdd.apply(this))
+	    return;
+
 	//compute the injections
 	this.computeInjections();
 
@@ -211,13 +214,12 @@ Num.prototype = {
 	    ptr = ptr.next;
 	}
 	
-	//var flag = true;
-	//while(flag){
+	var flag = true;
+	while(flag && !this.proofComplete){
 	    flag = false;
 	    ptr = this.primes.head.prev;
 	    while(ptr != this.primes.head){
 		var b = ptr.data.prove();
-		//alert(ptr.data.p + "**" + b)
 		flag = flag || b;
 
 		if(ptr.data.proofComplete){
@@ -227,7 +229,7 @@ Num.prototype = {
 		ptr = ptr.prev;
 	    }
 
-	//}
+	}
 
     },
 

@@ -61,25 +61,22 @@ Prime.prototype = {
 
 	var flag = false;
 	while(ptr != this.np.head){
-	    var b = ptr.data.countTest();
-	    flag = flag || b;
-	    b = TechElementSize.apply(this.n, this, ptr.data);
-	    flag = flag || b;
-	    b = ptr.data.doubleNormalizerTest();
-	    flag = flag || b;
-	    b = ptr.data.symmetricDivisorTest();
-	    flag = flag || b;
-	    b = ptr.data.largeIntersectionAbelianTest();
-	    flag = flag || b;
-	    b = TechLI.apply(this.n, this, ptr.data);
-	    flag = flag || b;
-	    b = TechDP.apply(this.n, this, ptr.data);
-	    flag = flag || b;
+	    var b = ptr.data.proofComplete;
+	    TechCount.apply(this.n, this, ptr.data);
+	    TechElementSize.apply(this.n, this, ptr.data);
+	    TechDNorm.apply(this.n, this, ptr.data);
+	    TechSymDiv.apply(this.n, this, ptr.data);
+	    TechLAI.apply(this.n, this, ptr.data);
+	    TechLI.apply(this.n, this, ptr.data);
+	    TechDP.apply(this.n, this, ptr.data);
+	    TechNormInSym.apply(this.n, this, ptr.data);
+	    //TechWacky.apply(this.n, this, ptr.data);
+
+	    flag = flag || (b!=ptr.data.proofComplete);
 
 	    ptr = ptr.next;
 	}
 	
-	//Since  we're deleting things later in the game, it's best to just check each time by iterating over this.np;
 	ptr = this.np.head.next;
 	while(ptr != this.np.head){
 	    if(!ptr.data.proofComplete)
@@ -95,53 +92,53 @@ Prime.prototype = {
     showProof: function(){
 	var pf = "";
 
-	/*
 	//okay, for now, just dump everything and don't even worry about the order
 	var ptr = this.np.head.next;
 	while(ptr != this.np.head){
-	pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+	    pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
 
-	ptr = ptr.next;
+	    ptr = ptr.next;
 	}
 
 	return pf;
-	}
-	};
-	/*/
-
-	var pf = "";
-
-	//if we have a proof
-	if(this.proofComplete){
-
-	    //if there is only one, don't show the cases
-	    if(this.np.size == 1)
-		return this.np.first().proof;
-
-	    //FIXME, lump cases together that can be
-	    var ptr = this.np.head.next;
-
-	    while(ptr != this.np.head){
-		pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-		ptr = ptr.next;
-	    }
-
-	    return pf;
-	}
-
-	else{
-	    var str = ""
-	    var ptr = this.np.head.next;
-	    while(ptr != this.np.head){
-		if(ptr.data.proofComplete)
-		    str += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-		ptr = ptr.next;
-	    }
-
-	    return str;
-	}
-
     }
 };
+/*/
+
+  var pf = "";
+
+  //if we have a proof
+  if(this.proofComplete){
+
+  //if there is only one, don't show the cases
+  if(this.np.size == 1)
+  return this.np.first().proof;
+
+  //FIXME, lump cases together that can be
+  var ptr = this.np.head.next;
+
+  while(ptr != this.np.head){
+  pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+
+  ptr = ptr.next;
+  }
+
+  return pf;
+  }
+
+  else{
+  var str = ""
+  var ptr = this.np.head.next;
+  while(ptr != this.np.head){
+  if(ptr.data.proofComplete)
+  str += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+
+  ptr = ptr.next;
+  }
+
+  return str;
+  }
+
+  }
+  };
+*/
