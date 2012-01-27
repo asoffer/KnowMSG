@@ -118,92 +118,38 @@ Num.prototype = {
 	if(this.proofComplete)
 	    return;
 
-	if(this.n == 1){
-	    this.proofComplete = true;
-	    this.proof = "<p>The trivial group is the only group on one element, and has no proper subgroup, let alone nontrivial normal ones, so it is vacuously simple.</p>";
-	    this.proofShown = true;
-	    $("#inner_statement").html("<p>Every group of order $" + this.n + "$ is simple.</p>");
-	    return;
-	}
-
-	//display taken care of inside
-	if(sporadicTest(this))
+	if(TechOne.apply(this) || sporadicTest(this) || TechPrimes.apply(this) || isSimple(this))
 	    return;
 
-	if(this.isPrime()){
-	    this.proofComplete = true;
-	    this.proof = pf_prime(this.n);
-	    this.proofShown = true;
-	    $("#inner_statement").html("<p>Every group of order $" + this.n + "$ is simple.</p>");
-	    return;
-	}
+	//$("#inner_statement").html("<p>Every group of order $" + this.n + "$ is simple.</p>");
+	//$("#inner_statement").html("<p>Every group of order $" + this.n + "$ is simple.</p>");
+	//$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
+	//$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 
-	if(this.isPrimePower()){
-	    this.proofComplete = true;
-	    this.proof = pf_prime_power(this.primes.first().p, this.n);
-	    this.proofShown = true;
-	    $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-	    return;
-	}
 
-	//check if it's simple
-	if(isSimple(this))
-	    return;
-	
-	$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-	
-
+	//compute all the factors and build lists of potential n_p
 	this.computeFactorList();
-
 	this.buildNP();
 
-	//iterate over primes and check if 1 is the only possible value for np
-	var ptr = this.primes.head.next;
-	while(ptr != this.primes.head){
-	    if(ptr.data.np.size == 1){
-		this.proofComplete = true;
-		this.proof = pf_one_mod_p(this, ptr.data);
-		this.proofShown = true;
-		$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-		return;
-	    }
-
-	    ptr = ptr.next;
-	}
-
-	if(TechTwoOdd.apply(this))
+	if(TechSylow.apply(this) || TechTwoOdd.apply(this))
 	    return;
+	//$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 
 	//compute the injections
 	this.computeInjections();
 
-
-	var p = this.somethingLessThanInject(this.divInject);
-	if(p){
-	    this.proofComplete = true;
-	    this.proof = pf_inject(this, p);
-	    this.proofShown = true;
-	    $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
+	if(TechInjectBound.apply(this, this.divInject) || TechInjectBound.apply(this, this.smartInject))
 	    return;
-	}
 
-	p = this.somethingLessThanInject(this.smartInject);
+	//$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 	
-	if((this.smartInject > 4 || factorial(this.smartInject)/this.n < 3) && p){
-	    this.proofComplete = true;
-	    this.proof = pf_inject(this, p);
-	    this.proofShown = true;
-	    $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-	    return;
-	}
-
 
 	//knock off nps too small for a div injection. if we need to
 	//do smart injection too. there's a question about wehether
 	//this is simpler than some of the other arguments, but it's
 	//much easier to do this check once than have some wacky
 	//ordering and have to check it 3 different times.
-	ptr = this.primes.head.next;
+	var ptr = this.primes.head.next;
 	while(ptr != this.primes.head){
 	    while(ptr.data.np.first().np < this.divInject)
 		ptr.data.np.popFront();
@@ -238,7 +184,7 @@ Num.prototype = {
 	var ptr = this.primes.head.next;
 	while(ptr != this.primes.head){
 	    if(ptr.data.pow == 1){
-		c += ptr.data.np.first().np * (ptr.data.p - 1);
+		c += ptr.data.smallestNP().np * (ptr.data.p - 1);
 	    }
 	    else
 		c += Math.pow(ptr.data.p, ptr.data.pow);
@@ -310,18 +256,6 @@ Num.prototype = {
 
 	this.proofShown = true;
 	return this.proof;
-    },
-
-    somethingLessThanInject: function(inj){
-	var ptr = this.primes.head.next;
-	while(ptr != this.primes.head){
-	    if(ptr.data.np.last().np < inj)
-		return ptr.data;
-
-	    ptr = ptr.next;
-	}
-
-	return false;
     },
 
     computeInjections: function(){

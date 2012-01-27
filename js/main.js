@@ -1,13 +1,13 @@
 var GLOBAL_v = 1.3;
 var GLOBAL_d = "Jan 22, 2012";
 var GLOBAL_n = null;
-var GLOBAL_fail = new Array(252,288,420,540,576,720,756);
+var GLOBAL_fail = new Array(252,288,420,576,720,756,840);
 
 $(function(){
     //set the version number
     $("#version").html("<span id = \"vers\">Version " + GLOBAL_v + "</span><br>Last updated "+GLOBAL_d);
     $("#vers").click(function(){
-	sendMessage("Changes","<h4>What's new in Version " + GLOBAL_v + "?</h4><ul><li>Technique list added</li><li>Groups sizes $630, 810, 990, 1890, 3080$ and more solved.</li><li>Simple group listing bug fixed.</li></ul><h4>What's new in Version 1.2?</h4><ul><li>Display issues with long lists fixed.</li><li>Potentially long lines only displayed at users choice.</li><li>Added capability to input arithmetic expressions.</li></ul>");
+	sendMessage("Changes","<h4>What's new in Version " + GLOBAL_v + "?</h4><ul><li>Groups sizes $540, 630, 810, 990, 1890$ and more solved.</li><li>Simple group listing bug fixed.</li></ul><h4>What's new in Version 1.2?</h4><ul><li>Display issues with long lists fixed.</li><li>Potentially long lines only displayed at users choice.</li><li>Added capability to input arithmetic expressions.</li></ul>");
     });
 
     generateFailList();
@@ -20,12 +20,13 @@ $(function(){
 	    sendMessage("About NoMSG", "<h4>What is NoMSG?</h4><p>NoMSG is a proof generator. If you input a positive integer $n$, NoMSG will attempt to find a simple group of order $n$, or generate a proof that no such simple groups exist.</p><h4>How does it work?</h4><p>Magic.</p>");
 	});
 
+    /*
     $("#tech")
 	.button({disabled: true})
 	.click(function(){
 	    return;
 	});
-
+    */
     //------------------------------
 
     $("#number_in").keyup(function(e){
@@ -59,7 +60,7 @@ $(function(){
 	    if(y != x || x < 1){
 		$("#inner_statement").html("<p>There are no (simple) groups of order $" + x + "$.</p>");
 
-		$("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was not a positive integer. Please try again, with number that has a more \"positive integer\" vibe to it.</div></div>");
+		$("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was not a positive integer. Please try again, with a number that has a more \"positive integer\" vibe to it.</div></div>");
 
 		MathJax.Hub.Typeset();
 

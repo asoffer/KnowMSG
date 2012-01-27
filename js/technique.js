@@ -20,8 +20,10 @@ Technique.prototype = {
 	    np.proofComplete = true;
 	    np.proof = this.proof(n, p, np);
 
-	    if(this.simpleType)
+	    if(this.simpleType){
+		//FIXME do a message display as well
 		n.proofShown = true;
+	    }
 	    return true;
 	}
 
@@ -237,7 +239,7 @@ TechTwoOdd.test = function(n){
     return n % 4 == 2;
 }
 TechTwoOdd.proof = function(n){
-    return "<p>Let $G$ be a group of order $" + n + "$. By Cauchy's theorem, $G$ has has an element $g$ of order $2$. As $G$ acts on itself by left multiplication, we have a map $\\phi: G\\to S_{\\left|G\\right|}$. This map by definition is injective, so $\\phi(G)\\cong G$. Since $\\phi(g)$ also has order 2, it must be the product of disjoint $2$-cycles. Furthermore, only the identity $\\phi(e)$ has any fixed points under this action, because $hx=x$, for $h,x\\in G$ means that $h=e$. Thus, $\\phi(g)$ must be the product of $" + (n >> 1) + "$ $2$-cycles. Since a $2$-cycle is an odd permutation, and $\\phi(g)$ is the product of an odd number of them, $\\phi(g)$ must be an odd permutation. That is, $\\phi(G)\\not\\subseteq A_{" + n + "}$. In particular, since $A_{" + n + "}\\lhd S_{" + n + "}$, we know that $\\phi(G)\\cap A_{" + n + "}\\lhd \\phi(G)$, meaning that $\\phi(G)$ is not simple.</p>";
+    return "<p>Let $G$ be a group of order $" + n + "$. By Cauchy's theorem, $G$ has has an element $g$ of order $2$. As $G$ acts on itself by left multiplication, we have a map $\\phi: G\\to S_{\\left|G\\right|}$. This map by definition is injective, so $\\phi(G)\\cong G$. Since $\\phi(g)$ also has order 2, it must be the product of disjoint $2$-cycles. Furthermore, only the identity $\\phi(e)$ has any fixed points under this action, because $hx=x$, for $h,x\\in G$ means that $h=e$. Thus, $\\phi(g)$ must be the product of $" + (n >> 1) + "$ $2$-cycles. Since a $2$-cycle is an odd permutation, and $\\phi(g)$ is the product of an odd number of them, $\\phi(g)$ must be an odd permutation. That is, $\\phi(G)\\not\\subseteq A_{" + n + "}$. In particular, since $A_{" + n + "}\\lhd S_{" + n + "}$, we know that $\\phi(G)\\cap A_{" + n + "}\\lhd \\phi(G)$, meaning that $\\phi(G)$, and therefore $G$, is not simple.</p>";
 }
 
 TechNormInSym = new Technique("element size from Normalizer carefully");
@@ -247,11 +249,14 @@ TechNormInSym.test = function(n, p, np){
 
     np.ptr = n.primes.head.next;
     while(np.ptr != n.primes.head){
-	var x = n.n/np.ptr.data.np.first();
+	var x = n.n/np.ptr.data.smallestNP();
 	if(np.ptr.data.np.size == 1 && x % m != 0){
 	    //can i write x as the sum of factors of m?
 	    //FIXME
-	    return true;
+
+	    //at least for now, not even sure if this is legit
+	    if(gcd(m, np.ptr.data.smallestNP()) == 1 || m > np.ptr.data.smallestNP())
+		return true;
 	}
 	np.ptr = np.ptr.next;
     }
@@ -283,4 +288,47 @@ TechWacky.test = function(n, p, np){
 }
 TechWacky.proof = function(n, p, np){
     return "FIXME WACKY";
+}
+
+TechOne = new Technique("is it one?", true);
+TechOne.test = function(n){ return n == 1 }
+TechOne.proof = function(n){ return "<p>The trivial group is the only group on one element, and has no proper subgroup, let alone nontrivial normal ones, so it is vacuously simple.</p>"; }
+
+TechSporadic = new Technique("is it a sporadic group", true);
+//TechSporadic.test = sporadicTest;
+
+TechSimple = new Technique("classification theorem", true);
+TechSimple.test = null;
+
+TechPrimes = new Technique("prime or prime power", true);
+TechPrimes.test = function(n){ return (n.isPrime() || n.isPrimePower()); }
+TechPrimes.proof = function(n){ return (n.isPrime() ? pf_prime(n.n) : pf_prime_power(n.primes.first().p, n.n)); }
+
+TechSylow = new Technique("does n_p only have one option", true);
+TechSylow.test = function(n){
+    n.ptr = n.primes.head.next
+    while(n.ptr != n.primes.head){
+	if(n.ptr.data.np.size == 1)
+	    return true;
+	n.ptr = n.ptr.next;
+    }
+
+    return false;
+}
+TechSylow.proof = function(n){ return pf_one_mod_p(n, n.ptr.data); }
+
+TechInjectBound = new Technique("bound the injection sizes", true);
+TechInjectBound.test = function(n, b){
+    n.ptr = n.primes.head.next;
+    while(n.ptr != n.primes.head){
+	if(n.ptr.data.np.last().np < b)
+	    return n.ptr.data;
+
+	n.ptr = n.ptr.next;
+    }
+
+    return false;
+}
+TechInjectBound.proof = function(n){
+    return pf_inject(n, n.ptr.data);
 }
