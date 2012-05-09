@@ -1,5 +1,5 @@
 var GLOBAL_v = 1.3;
-var GLOBAL_d = "Jan 22, 2012";
+var GLOBAL_d = "Feb 27, 2012";
 var GLOBAL_n = null;
 var GLOBAL_fail = new Array(252,288,420,576,720,756,840);
 
@@ -7,7 +7,7 @@ $(function(){
     //set the version number
     $("#version").html("<span id = \"vers\">Version " + GLOBAL_v + "</span><br>Last updated "+GLOBAL_d);
     $("#vers").click(function(){
-	sendMessage("Changes","<h4>What's new in Version " + GLOBAL_v + "?</h4><ul><li>Groups sizes $540, 630, 810, 990, 1890$ and more solved.</li><li>Simple group listing bug fixed.</li></ul><h4>What's new in Version 1.2?</h4><ul><li>Display issues with long lists fixed.</li><li>Potentially long lines only displayed at users choice.</li><li>Added capability to input arithmetic expressions.</li></ul>");
+	sendMessage("Changes","<h4>What's new in Version " + GLOBAL_v + "?</h4><ul><li>Groups sizes $540, 630, 810, 990, 1890$ and more solved.</li></ul><h4>What's new in Version 1.2?</h4><ul><li>Display issues with long lists fixed.</li><li>Potentially long lines only displayed at users choice.</li><li>Added capability to input arithmetic expressions.</li></ul>");
     });
 
     generateFailList();

@@ -8,12 +8,12 @@ simpleA.isThisSize = function(num){
     var x = 1;
     var c = 2;
     while(num.n > x){
-	++c;
-	x *= c;
+        ++c;
+        x *= c;
     }
 
     if(num.n == x)
-	return {n: c, q: 0};
+        return {n: c, q: 0};
     return false;
 }
 
@@ -25,7 +25,7 @@ simplePSL.powSize = function(num){ return triangle(num - 1); };
 simplePSL.fn = function(n,q){
     var x = 1;
     for(i = 2; i <= n; ++i)
-	x *= Math.pow(q, i) - 1;
+        x *= Math.pow(q, i) - 1;
 
     return x * Math.pow(q, this.powSize(n))/gcd(n, q - 1);
 }
@@ -39,7 +39,7 @@ simpleO.fn = function(n,q){
 
     var x = 1;
     for(i = 1; i <= n; ++i){
-	x *= Math.pow(q, 2*i) - 1;
+        x *= Math.pow(q, 2*i) - 1;
     }
 
     return x * Math.pow(q, this.powSize(n))/gcd(2, q - 1);
@@ -53,7 +53,7 @@ simplePSp.powSize = function(num){ return num * num; };
 simplePSp.fn = function(n,q){
     var x = 1;
     for(i = 1; i <= n; ++i){
-	x *= Math.pow(q, 2 * i) - 1;
+        x *= Math.pow(q, 2 * i) - 1;
     }
 
     return x * Math.pow(q, this.powSize(n))/gcd(2, q - 1);
@@ -67,7 +67,7 @@ simpleOp.powSize = function(num){ return num * (num - 1); };
 simpleOp.fn = function(n,q){
     var x = 1;
     for(i = 1; i < n; ++i){
-	x *= Math.pow(q, i * 2) - 1;
+        x *= Math.pow(q, i * 2) - 1;
     }
 
     return  x * Math.pow(q, this.powSize(n)) * (Math.pow(q, n) - 1)/gcd(4, Math.pow(q,n) - 1);
@@ -76,43 +76,43 @@ simpleOp.fn = function(n,q){
 var simpleE6 = new Simple("exceptional Chevalley group");
 simpleE6.sym = function(n,q){ return "E_6(" + q + ")"; };
 simpleE6.fn = function(n,q){ return Math.pow(q, 36) *
-			     (Math.pow(q, 12) - 1) *
-			     (Math.pow(q, 9) - 1) *
-			     (Math.pow(q, 8) - 1) *
-			     (Math.pow(q, 6) - 1) *
-			     (Math.pow(q, 5) - 1) *
-			     (Math.pow(q, 2) - 1) /
-			     gcd(3, q - 1);
-			   };
+    (Math.pow(q, 12) - 1) *
+        (Math.pow(q, 9) - 1) *
+        (Math.pow(q, 8) - 1) *
+        (Math.pow(q, 6) - 1) *
+        (Math.pow(q, 5) - 1) *
+        (Math.pow(q, 2) - 1) /
+        gcd(3, q - 1);
+};
 simpleE6.logBound = 78;
 
 var simpleE7 = new Simple();
 simpleE7.name = "exceptional Chevalley group";
 simpleE7.sym = function(n,q){ return "E_7(" + q + ")"; };
 simpleE7.fn = function(n,q){ return Math.pow(q, 63) *
-			     (Math.pow(q, 18) - 1) *
-			     (Math.pow(q, 14) - 1) *
-			     (Math.pow(q, 12) - 1) *
-			     (Math.pow(q, 10) - 1) *
-			     (Math.pow(q, 8) - 1) *
-			     (Math.pow(q, 6) - 1) *
-			     (Math.pow(q, 2) - 1) /
-			     gcd(2, q - 1);
-			   };
+    (Math.pow(q, 18) - 1) *
+        (Math.pow(q, 14) - 1) *
+        (Math.pow(q, 12) - 1) *
+        (Math.pow(q, 10) - 1) *
+        (Math.pow(q, 8) - 1) *
+        (Math.pow(q, 6) - 1) *
+        (Math.pow(q, 2) - 1) /
+        gcd(2, q - 1);
+};
 simpleE7.logBound = 133;
 
 var simpleE8 = new Simple();
 simpleE8.name = "exceptional Chevalley group";
 simpleE8.sym = function(n,q){ return "E_8(" + q + ")"; };
 simpleE8.fn = function(n,q){ return Math.pow(q, 120) *
-			     (Math.pow(q, 30) - 1) *
-			     (Math.pow(q, 24) - 1) *
-			     (Math.pow(q, 20) - 1) *
-			     (Math.pow(q, 18) - 1) *
-			     (Math.pow(q, 14) - 1) *
-			     (Math.pow(q, 12) - 1) *
-			     (Math.pow(q, 8) - 1) *
-			     (Math.pow(q, 2) - 1); };
+    (Math.pow(q, 30) - 1) *
+        (Math.pow(q, 24) - 1) *
+        (Math.pow(q, 20) - 1) *
+        (Math.pow(q, 18) - 1) *
+        (Math.pow(q, 14) - 1) *
+        (Math.pow(q, 12) - 1) *
+        (Math.pow(q, 8) - 1) *
+        (Math.pow(q, 2) - 1); };
 simpleE8.logBound = 248;
 
 var simpleF4 = new Simple();
@@ -137,7 +137,7 @@ simple2A.powSize = function(num){ return triangle(num); };
 simple2A.fn = function(n,q){
     var x = 1;
     for(i = 1; i <= n; ++i)
-	x *= Math.pow(q, i+1) + Math.pow(-1, i);
+        x *= Math.pow(q, i+1) + Math.pow(-1, i);
 
     return x * Math.pow(q, this.powSize(n))/gcd(n + 1, q + 1);
 }
@@ -148,10 +148,10 @@ simpleOm.determined = false;
 simpleOm.exception = function(n,q){ return n < 4; };
 simpleOm.powSize = function(num){ return 2*triangle(num - 1); };
 simpleOm.fn = function(n,q){
-    
+
     var x = 1;
     for(i = 1; i < n; ++i)
-	x *= Math.pow(q, 2*i) -1;
+        x *= Math.pow(q, 2*i) -1;
 
     return x * (Math.pow(q,n) + 1) * Math.pow(q, this.powSize(n))/gcd(4, Math.pow(q,n) + 1);
 }
@@ -160,40 +160,40 @@ var simple2E6 = new Simple();
 simple2E6.name = "Steinberg group";
 simple2E6.sym = function(n,q){ return "{}^2E_6(" + q + "^2)"; };
 simple2E6.fn = function(n,q){ return Math.pow(q, 36) *
-			      (Math.pow(q, 12) - 1) *
-			      (Math.pow(q, 9) + 1) *
-			      (Math.pow(q, 8) - 1) *
-			      (Math.pow(q, 6) - 1) *
-			      (Math.pow(q, 5) + 1) *
-			      (Math.pow(q, 2) - 1) /
-			      gcd(3, q + 1); };
+    (Math.pow(q, 12) - 1) *
+        (Math.pow(q, 9) + 1) *
+        (Math.pow(q, 8) - 1) *
+        (Math.pow(q, 6) - 1) *
+        (Math.pow(q, 5) + 1) *
+        (Math.pow(q, 2) - 1) /
+        gcd(3, q + 1); };
 simple2E6.logBound = 78;
 
 var simple3D4 = new Simple();
 simple3D4.name = "Steinberg group";
 simple3D4.sym = function(n,q){ return "{}^3D_4(" + q + "^3)"; };
 simple3D4.fn = function(n,q){ return Math.pow(q, 12) *
-			      (Math.pow(q, 6) - 1) *
-			      (Math.pow(q, 2) - 1) *
-			      (Math.pow(q, 8) + Math.pow(q,4) + 1); };
+    (Math.pow(q, 6) - 1) *
+        (Math.pow(q, 2) - 1) *
+        (Math.pow(q, 8) + Math.pow(q,4) + 1); };
 
 simple3D4.logBound = 28;
 
 //these cases are odd. we use q when we mean to use n
 var simpleSuz = new Simple();
 simpleSuz.name = "Suzuki group";
-simpleSuz.exception = function(n,q){ return this.nn < 1; };
+simpleSuz.exception = function(n,q){ return ((this.nn - 1) << 1) < 1; };
 simpleSuz.sym = function(n,q){ return "Sz(2^{" + this.nn + "})"; };
 simpleSuz.fn = function(n,q){ 
     //for saving n;
     this.nn = Math.log(q)/Math.log(2);
 
     if(this.nn != Math.floor(this.nn))
-	return -1;
+        return -1;
 
     return Math.pow(q, 2) *
-	(Math.pow(q, 2) + 1) *
-	(q - 1);
+        (Math.pow(q, 2) + 1) *
+        (q - 1);
 };
 simpleSuz.logBound = 5;
 
@@ -206,10 +206,10 @@ simpleRee2.fn = function(n,q){
     this.nn = Math.log(q)/Math.log(2);
 
     return Math.pow(q, 12) *
-	(Math.pow(q, 6) + 1) *
-	(Math.pow(q, 4) - 1) *
-	(Math.pow(q, 3) + 1) *
-	(q - 1);
+        (Math.pow(q, 6) + 1) *
+        (Math.pow(q, 4) - 1) *
+        (Math.pow(q, 3) + 1) *
+        (q - 1);
 };
 simpleRee2.logBound = 26;
 
@@ -222,8 +222,8 @@ simpleRee3.fn = function(n,q){
     this.nn = Math.log(q)/Math.log(3);
 
     return Math.pow(q, 3) *
-	(Math.pow(q, 3) + 1) *
-	(q - 1);
+        (Math.pow(q, 3) + 1) *
+        (q - 1);
 };
 simpleRee3.logBound = 7;
 
@@ -235,7 +235,7 @@ simpleTits.determined = false;
 simpleTits.powSize = -1;
 simpleTits.isThisSize = function(num){
     if(num == 17971200)
-	return {n: 0, q: 0};
+        return {n: 0, q: 0};
 }
 
 //------------------------------
@@ -246,19 +246,19 @@ var simpleArray = new Array(simpleA, simplePSL, simpleO, simplePSp, simpleOp, si
 function isSimple(n){
     var simpleList = new List();
     for(var i = 0; i < simpleArray.length; ++i){
-	var x = simpleArray[i].isInstance(n);
-	if(x){
-	    var s = "he " + simpleArray[i].name;
-	    if(simpleArray[i].sym != null)
-		s += " $" + simpleArray[i].sym(x.n, x.q) + "$";
-	    s += ".</p>";
+        var x = simpleArray[i].isInstance(n);
+        if(x){
+            var s = "he " + simpleArray[i].name;
+            if(simpleArray[i].sym != null)
+                s += " $" + simpleArray[i].sym(x.n, x.q) + "$";
+            s += ".</p>";
 
-	    simpleList.pushBack(s);
-	}
+            simpleList.pushBack(s);
+        }
     }
 
     if(simpleList.size == 0)
-	return false;
+        return false;
 
     n.proofComplete = true;
     n.proofShown = true;
@@ -268,17 +268,17 @@ function isSimple(n){
     this.proof = "";
 
     if(simpleList.size == 1){
-	n.proof = "<p>Up to isomorphism, the only simple group of order $" + n + "$ is t" + simpleList.first();
-	return true;
+        n.proof = "<p>Up to isomorphism, the only simple group of order $" + n + "$ is t" + simpleList.first();
+        return true;
     }
 
     n.proof = "<p>The following are all of the simple groups of order $" + n + "$ up to isomorphism. Some of these groups may be isomorphic, but every simple group of order $" + n + "$ is isomorphic to at least one of the following:</p>";
 
     var ptr = simpleList.head.next;
     while(ptr != simpleList.head){
-	n.proof += "<p>T" + ptr.data;
+        n.proof += "<p>T" + ptr.data;
 
-	ptr = ptr.next;
+        ptr = ptr.next;
     }
 
 
@@ -294,14 +294,14 @@ var spor_name = new Array("a Mathieu group","a Mathieu group","a Mathieu group",
 
 function sporadicTest(num){
     for(var i = 0; i < spor.length; ++i){
-	if((""+num.n) == spor[i]){
-	    $("#inner_statement").html("<p>There exists a simple group of order $" + num +  "=" + showFactorization(num) + "$.</p>");
+        if((""+num.n) == spor[i]){
+            $("#inner_statement").html("<p>There exists a simple group of order $" + num +  "=" + showFactorization(num) + "$.</p>");
 
-	    num.proof = "<p>In fact, the sporadic group $" + spor_sym[i] + "$, (" + spor_name[i] + ") has order $" + num.n + "$.</p>";
-	    num.proofShown = true;
-	    num.proofComplete = true;
-	    return true;
-	}
+            num.proof = "<p>In fact, the sporadic group $" + spor_sym[i] + "$, (" + spor_name[i] + ") has order $" + num.n + "$.</p>";
+            num.proofShown = true;
+            num.proofComplete = true;
+            return true;
+        }
     }
 
     return false;

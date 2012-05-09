@@ -1,66 +1,69 @@
 <html>
-  <head>
-    <title> NoMSG | No More Simple Groups</title>
+    <head>
+        <title> NoMSG | No More Simple Groups</title>
 
-    <!-- load mathjax -->
-    <script type="text/javascript" src="mathjax/MathJax.js?config=default"></script>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-      extensions: ["tex2jax.js","TeX/noUndefined.js"],
-      jax: ["input/TeX","output/HTML-CSS"],
-      tex2jax: {inlineMath: [["$","$"]]},
-      TeX: {extensions: ["AMSmath.js","AMSsymbols.js"]}
-      });
+        <!-- load mathjax -->
+        <script type="text/javascript" src="mathjax/MathJax.js?config=default"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                extensions: ["tex2jax.js","TeX/noUndefined.js"],
+                jax: ["input/TeX","output/HTML-CSS"],
+                tex2jax: {inlineMath: [["$","$"]]},
+                TeX: {extensions: ["AMSmath.js","AMSsymbols.js"]}
+            });
 
-    </script>
+        </script>
 
 
-    <!-- load ui -->
-    <link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
-    <link type="text/css" href="css/style.css" rel="Stylesheet" />
+        <!-- load ui -->
+        <link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
+        <link type="text/css" href="css/style.css" rel="Stylesheet" />
 
-    <!-- load jquery -->
-    <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+        <!-- load jquery -->
+        <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
 
-    <!-- load everything else -->
-    <script src = "js/List.js"></script>
-    <script src = "js/Technique.js"></script>
-    <script src = "js/Option.js"></script>
-    <script src = "js/Prime.js"></script>
-    <script src = "js/Num.js"></script>
-    <script src = "js/Simple.js"></script>
-    <script src = "js/Classification.js"></script>
-    <script src = "js/misc.js"></script>
-    <script src = "js/Proofs.js"></script>
-    <script src = "js/main.js"></script>
-    <!--<script src = "js/nomsg.min.js"></script>-->
-  </head>
-  <body>
+        <!-- load everything else -->
+        <script src = "js/List.js"></script>
+        <script src = "js/Technique.js"></script>
+        <script src = "js/Option.js"></script>
+        <script src = "js/Prime.js"></script>
+        <script src = "js/Num.js"></script>
+        <script src = "js/Simple.js"></script>
+        <script src = "js/Classification.js"></script>
+        <script src = "js/misc.js"></script>
+        <script src = "js/Proofs.js"></script>
+        <script src = "js/main.js"></script>
+        <!--<script src = "js/nomsg.min.js"></script>-->
+    </head>
+    <body>
 
-    <div id = "content">
-      <p id = "version"></p>
-      <h1>NoMSG $|$ No More Simple Groups</h1>
+        <div id = "content">
+            <p id = "version"></p>
+            <h1>NoMSG $|$ No More Simple Groups</h1>
 
-      <!-- toolbar -->
-      <div id = "toolbar" class = "ui-widget-header ui-corner-all">
-	<input id = "number_in" class = "ui-corner-all">
-	<button id = "go">Go!</button>
+            <!-- toolbar -->
+            <div id = "toolbar" class = "ui-widget-header ui-corner-all">
+                <input id = "number_in" type="text" value="Pick a number..." class = "ui-corner-all"
+                onblur="if (this.value == '') {this.value = 'Pick a number...'; }"
+                onfocus="if (this.value == 'Pick a number...') {this.value = '';}" />
+                <!--<input id = "number_in" class = "ui-corner-all">-->
+                <button id = "go">Go!</button>
 
-	<button id = "about">About NoMSG</button>
-	<!--<button id = "tech">Techniques used</button>-->
-      </div>
+                <button id = "about">About NoMSG</button>
+                <!--<button id = "tech">Techniques used</button>-->
+            </div>
 
-      <div id = "message" class = "dialog"></div>
+            <div id = "message" class = "dialog"></div>
 
-      <div id = "statement" class = "ui-widget-header ui-corner-all">
-	<div id = "inner_statement" class = "ui-widget-content ui-corner-all"></div>
-      </div>
+            <div id = "statement" class = "ui-widget-header ui-corner-all">
+                <div id = "inner_statement" class = "ui-widget-content ui-corner-all"></div>
+            </div>
 
-      <div id = "proof" class = "ui-widget-content ui-corner-all"></div>
+            <div id = "proof" class = "ui-widget-content ui-corner-all"></div>
 
-      <div id = "credits" class = "ui-widget-header ui-corner-all">
-	<table><tr><td align="left"></td><td align="right">Code and proofs by <a href = "http://www.math.ucla.edu/~asoffer">Andy Soffer</a></td></tr></table>
-    </div>
-  </body>
-</html>
+            <div id = "credits" class = "ui-widget-header ui-corner-all">
+                <table><tr><td align="left"></td><td align="right">Code and proofs by <a href = "http://www.math.ucla.edu/~asoffer">Andy Soffer</a></td></tr></table>
+            </div>
+        </body>
+    </html>

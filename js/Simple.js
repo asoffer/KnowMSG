@@ -17,64 +17,64 @@ function Simple(nm){
 
 Simple.prototype = {
     toString: function(){
-	return "[" + this.name + " simple group class]";
+        return "[" + this.name + " simple group class]";
     },
 
     isInstance: function(num){
-	if(this.determined){
-	    var q = Math.floor(Math.pow(num.n, 1/this.logBound)+1);
+        if(this.determined){
+            var q = Math.floor(Math.pow(num.n, 1/this.logBound)+1);
 
-	    while(this.fn(0,q) > num){
-		--q;
-	    }
+            while(this.fn(0,q) > num){
+                --q;
+            }
 
-	    if(this.fn(0,q) == num && (new Num(q)).isPrimePower() && !this.exception(0,q)){
-		return {q: q, n: 0};
-	    }
-	    else
-		return false;
-	}
-	else if(this.powSize == -1){
-	    var x = this.isThisSize(num);
-	    if(!x)
-		return false;
-	    if(!this.exception(x.n, x.q))
-		return x;
-	    return false;
-	}
-	else{
-	    var l = this.generatePotentialList(num);
-	    var ptr = l.head.next;
-	    while(ptr != l.head){
-		if(this.fn(ptr.data.n, ptr.data.q) == num && (new Num(ptr.data.q)).isPrimePower() && !this.exception(ptr.data.n,ptr.data.q))
-		    return ptr.data;
-		ptr = ptr.next;
-	    }
-	    return false;
+            if(this.fn(0,q) == num && (new Num(q)).isPrimePower() && !this.exception(0,q)){
+                return {q: q, n: 0};
+            }
+            else
+                return false;
+        }
+        else if(this.powSize == -1){
+            var x = this.isThisSize(num);
+            if(!x)
+                return false;
+            if(!this.exception(x.n, x.q))
+                return x;
+            return false;
+        }
+        else{
+            var l = this.generatePotentialList(num);
+            var ptr = l.head.next;
+            while(ptr != l.head){
+                if(this.fn(ptr.data.n, ptr.data.q) == num && (new Num(ptr.data.q)).isPrimePower() && !this.exception(ptr.data.n,ptr.data.q))
+                    return ptr.data;
+                ptr = ptr.next;
+            }
+            return false;
 
-	}
+        }
 
     },
 
     //only used for undetermined guesses
     generatePotentialList: function(num){
-	var ptr = num.primes.head.next;
-	var potentials = new List();
-	while(ptr != num.primes.head){
-	    var pow = ptr.data.pow;
-	    var n = 1;
+        var ptr = num.primes.head.next;
+        var potentials = new List();
+        while(ptr != num.primes.head){
+            var pow = ptr.data.pow;
+            var n = 1;
 
-	    while(this.powSize(n) <= pow){
-		if(this.powSize(n) > 0 && pow % this.powSize(n) == 0){
-		    potentials.pushBack({q: Math.pow(ptr.data.p, pow/this.powSize(n)), n: n});
-		}
-		++n;
-	    }
+            while(this.powSize(n) <= pow){
+                if(this.powSize(n) > 0 && pow % this.powSize(n) == 0){
+                    potentials.pushBack({q: Math.pow(ptr.data.p, pow/this.powSize(n)), n: n});
+                }
+                ++n;
+            }
 
-	    ptr = ptr.next;
-	}
+            ptr = ptr.next;
+        }
 
-	return potentials;
+        return potentials;
 
     },
 
