@@ -68,20 +68,6 @@ TechDP.proof = function(n, p, np){
     return "<p>Since $G$ acts transitively on the " + sylow(p) + "s of $G$ by conjugation, we have a nontrivial map $\\phi:G\\to S_{" + np + "}$. If $P$ is a " + sylow(p) + " of $G$, since every element of the normalizer $N_G(P)$ fixes $P$, we in fact have a nontrivial map $\\overline\\phi=\\phi\\mid_{N_G(P)}:N_G(P)\\to S_{" + p + "}$. Since $\\left|N_G(P)\\right|=" + (p.p << 1) + "$, and the only groups of order $" + (p.p << 1) + "$ are $" + zmod(p.p << 1) + "$ and $D_{" + p + "}$, one of these must be a subgroup of $S_{" + p + "}$, which cannot be.</p>";
 }
 
-/*
-   TechElementSize = new Technique("element size test");
-   TechElementSize.test = function(n, p, np){
-//look at the normalizer of a sylow p group. given it's size, we know that it has an element of some order maximal. maybe this is too big?
-np.normSize = new Num(n.n/np);
-np.maxCyclic = np.normSize.maxOrder();
-
-return ((new Num(np.maxCyclic)).sumOfPrimeDivisors() > np - 1);
-}
-TechElementSize.proof = function(n, p, np){
-return "<p>Let  $P_{" + p + "}$ be a " + sylow(p) + ". Then $N_G(P_{" + p + "})$ is a group of order $" + (n.n/np) + "$. Any group of order $" + (n.n/np) + "$ has a cyclic subgroup of order $" + np.maxCyclic + "$. However, the normalizer $N_G(P_{" + p + "})$ is the stabilizer $P_{" + p + "}$ under the action of conjugation on the " + sylow(p) + "s of $G$, so instead of only embedding inside $S_{" + np + "}$, we actually know that it embeds inside $S_{" + (np - 1) + "}$. But $S_{" + (np - 1) + "}$ has no cyclic subgroups of order $" + np.maxCyclic + "$.</p>";
-}
-*/
-
 TechLI = new Technique("large intersection");
 TechLI.test = function(n, p, np){
     if(p.pow == 1 || np % Math.pow(p.p, 2) == 1)
@@ -256,13 +242,13 @@ TechSymDiv.proof = function(n, p, np){
     pf = "<p>We know that $G$ acts on the " + sylow(p) + "s by conjugation, and this action gives rise to a nontrivial map $\\phi: G\\to S_{n_{" + p + "}}=S_{" + np + "}$. If $G$ is to be simple, $\\phi$ must be injective, so we can identify $G$ with a subgroup of $S_{" + np + "}$. Let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + " of $G$. Since $" + np.ptr.data.p + "^2\\nmid\\left|S_{" + np + "}\\right|$, $P_{" + np.ptr.data.p + "}$ is also a " + sylow(np.ptr.data.p) + " of $S_{" + np + "}$. This means that $N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})$. We will show that for divisibility reasons, this cannot be.</p><p>We can explicitly count the number of elements in $S_{" + np + "}$ of order $" + np.ptr.data.p + "$. They come precisely from $" + np.ptr.data.p + "$-cycles, of which there are $$\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-1)!$$ Since each such element is in precisely one " + sylow(np.ptr.data.p) + " of $S_{" + np.ptr.data.p + "}$, and each " + sylow(np.ptr.data.p) + " has exactly $" + (np.ptr.data.p - 1) + "$ elements of order $" + np.ptr.data.p + "$, there are $\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-2)!$ " + sylow(np.ptr.data.p) + "s.</p>"
 
 
-    if(np.other % np.norm != 0){
-        return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "}),$$ which contradicts Lagrange's theorem.</p>";
-    }
+        if(np.other % np.norm != 0){
+            return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "}),$$ which contradicts Lagrange's theorem.</p>";
+        }
 
-    else if(np.other == np.norm){
-        return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. Moreover, we know that $G$ embeds into $A_{" + np + "}$, lest $G\\cap A_{" + np + "}\\lhd G$. So $N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}) = " + (np.other/2) + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "})$$, which contradicts Lagrange's theorem.</p>";
-    }
+        else if(np.other == np.norm){
+            return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. Moreover, we know that $G$ embeds into $A_{" + np + "}$, lest $G\\cap A_{" + np + "}\\lhd G$. So $N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}) = " + (np.other/2) + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "})$$, which contradicts Lagrange's theorem.</p>";
+        }
 }
 
 TechTwoOdd = new Technique("2^1*m", true);
@@ -276,51 +262,67 @@ TechTwoOdd.proof = function(n){
 TechNormInSym = new Technique("element size from Normalizer carefully");
 TechNormInSym.test = function(n, p, np){
     var norm = new Num(n.n/np.np);
-    var m = norm.maxOrder();
 
+    //I can only solve the positive diophantine equation for two primes
+    if(!norm.primes.size > 2 || !norm.mustBeCyclic())
+        return;
+
+
+    //its cyclic, so there's an element of order "norm."
+    //find some np we know
     np.ptr = n.primes.head.next;
     while(np.ptr != n.primes.head){
-        var x = n.n/np.ptr.data.smallestNP();
-        if(np.ptr.data.np.size == 1 && x % m != 0){
-            //can i write x as the sum of factors of m?
-            //FIXME
+        var x = np.ptr.data.smallestNP();
+        var y = n.n/x;
 
-            //at least for now, not even sure if this is legit
-            //FIXME this is blatantly incorrect
-            if(gcd(m, np.ptr.data.smallestNP()) == 1 || m > np.ptr.data.smallestNP()){
+
+        var p1 = norm.primes.first().p;
+        var p2 = norm.primes.last().p;
+        //compute p1,p2 inverse mod the other
+        var p1i = modInverse(p1,p2);
+        var p2i = modInverse(p2,p1);
+
+        //can i write it as a combination?
+        if(p1i && p2i && np.ptr.data.np.size == 1 && y % norm.n != 0){
+
+            //now we want to write
+            //x.np = p1 * a + p2 * b
+            var a = x.np * p1i % p2;
+            var b = x.np * p2i % p1;
+
+            console.log(a,b);
+            if(a == 0 || b == 0 || a * p1 + b * p2 != x.np)
                 return true;
-            }
+
         }
+
         np.ptr = np.ptr.next;
     }
 
 }
 TechNormInSym.proof = function(n, p, np){
-    return "BOOM "+n + "   " + p + " " + np + "<br>normalizer size is " + (new Num(n.n/np.np)) + "<br>x=" + n.n/np.ptr.data.smallestNP();
+    return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ", and let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + ". The normalizer $N_G(P_{" + p + "})$ has order $" + n.n/np.np + "$, and therefore must be cyclic, so we can pick $g\\in G$ to be an element of order $" + n.n/np.np + "$. Since $" + n.n/np.np + "$ does not divide $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "}=" + (n/np.ptr.data.smallestNP()) + "$, the group element $g$ cannot normalize $P_{" + np.ptr.data.p + "}$, nor any other " + sylow(np.ptr.data.p) + ". Thus, if we identify $g$ with its action on the " + np.ptr.data.smallestNP() + " " + sylow(np.ptr.data.p) + ", we see that we have produced an element in $S_{" + np.ptr.data.smallestNP() + "}$ of order $" + n.n/np.np + "$ which has no fixed points. It is routine to check that no such element can exist.</p>";
+    //return "BOOM "+n + "   " + p + " " + np + "<br>normalizer size is " + (new Num(n.n/np.np)) + "<br>x=" + n.n/np.ptr.data.smallestNP(); + "<br>";
 }
-
-
-
-
 
 //------------------------------
 
 TechWacky = new Technique("wacky420");
 TechWacky.test = function(n, p, np){
-    var ptr = n.primes.head.next;
-    while(ptr != n.primes.head){
+    np.ptr = n.primes.head.next;
+    while(np.ptr != n.primes.head){
         var norm = new Num(n.n/np.np);
         norm.computeFactorList();
-        if(np.np % ptr.data.p == 0 && ptr.data.p != p.p && norm.kModM(1, ptr.data.p).size == 1)
+        if(np.np % np.ptr.data.p == 0 && np.ptr.data.p != p.p && norm.kModM(1, np.ptr.data.p).size == 1)
             return true;
 
-        ptr = ptr.next;
+        np.ptr = np.ptr.next;
     }
 
     return false;
 }
 TechWacky.proof = function(n, p, np){
-    return "FIXME WACKY";
+    return "FIXME WACKY:" + np.np + "   " + np.ptr.data.p + "   " + p.p + " " + n.n/np.np;
 }
 
 TechOne = new Technique("is it one?", true, 1);

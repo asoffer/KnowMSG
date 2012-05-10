@@ -81,6 +81,8 @@ Num.prototype = {
     },
 
     kModM: function(k,m){
+        this.computeFactorList();
+
         var l = new List();
         var ptr = this.factors.head.next;
         while(ptr != this.factors.head){
@@ -342,33 +344,7 @@ Num.prototype = {
         return s;
     },
 
-    maxOrder: function(){
-        //iterate over the powerset
-        var p = this.primes.powerSet();
-        var ptr = p.head.next;
-        var n;
-        var m = -1;
-        while(ptr != p.head){
-            //make a num which is the product of the primes
-            n = 1;
-
-            var ptr2 = ptr.data.head.next;
-            while(ptr2 != ptr.data.head){
-                n *= ptr2.data.p;
-                ptr2 = ptr2.next;
-            }
-            var x = new Num(n);
-            x.computeFactorList();
-            if(x.mustBeCyclic() && n > m)
-                m = n;
-
-            ptr = ptr.next;
-        }
-
-        return m;
-
-    },
-
+    //use the chinese remainder theorem
     mustBeCyclic: function(){
         var ptr = this.primes.head.next;
 

@@ -63,14 +63,13 @@ Prime.prototype = {
         while(ptr != this.np.head){
             var b = ptr.data.proofComplete;
             TechCount.apply(this.n, this, ptr.data);
-            //	    TechElementSize.apply(this.n, this, ptr.data);
             TechDNorm.apply(this.n, this, ptr.data);
             TechSymDiv.apply(this.n, this, ptr.data);
             TechLAI.apply(this.n, this, ptr.data);
             TechLI.apply(this.n, this, ptr.data);
             TechDP.apply(this.n, this, ptr.data);
             TechNormInSym.apply(this.n, this, ptr.data);
-            //TechWacky.apply(this.n, this, ptr.data);
+            TechWacky.apply(this.n, this, ptr.data);
 
             flag = flag || (b!=ptr.data.proofComplete);
 
