@@ -29,6 +29,8 @@ Technique.prototype = {
             np.proofComplete = true;
             np.proof = this.proof(n, p, np);
 
+            n.workedOptions.pushBack(np);
+
             if(this.simpleType){
                 var v = $("#inner_statement");
                 switch(this.displayCode){
@@ -49,6 +51,7 @@ Technique.prototype = {
                 }
 
                 n.proofShown = true;
+
             }
             return true;
         }
@@ -253,11 +256,11 @@ TechSymDiv.proof = function(n, p, np){
     pf = "<p>We know that $G$ acts on the " + sylow(p) + "s by conjugation, and this action gives rise to a nontrivial map $\\phi: G\\to S_{n_{" + p + "}}=S_{" + np + "}$. If $G$ is to be simple, $\\phi$ must be injective, so we can identify $G$ with a subgroup of $S_{" + np + "}$. Let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + " of $G$. Since $" + np.ptr.data.p + "^2\\nmid\\left|S_{" + np + "}\\right|$, $P_{" + np.ptr.data.p + "}$ is also a " + sylow(np.ptr.data.p) + " of $S_{" + np + "}$. This means that $N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})$.";
 
     if(np.other % np.norm != 0){
-        return pf + "We will show that for divisibility reasons, this cannot be.</p><p>We can explicitly count the number of elements in $S_{" + np + "}$ of order $" + np.ptr.data.p + "$. They come precisely from $" + np.ptr.data.p + "$-cycles, of which there are $$\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-1)!$$ Since each such element is in precisely one " + sylow(np.ptr.data.p) + " of $S_{" + np.ptr.data.p + "}$, and each " + sylow(np.ptr.data.p) + " has exactly $" + (np.ptr.data.p - 1) + "$ elements of order $" + np.ptr.data.p + "$, there are $\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-2)!$ " + sylow(np.ptr.data.p) + "s.</p><p>From the Sylow theorems, we know that $\\left|N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})$, which contradicts Lagrange's theorem.</p>"
+        return pf + "We will show that for divisibility reasons, this cannot be.</p><p>We can explicitly count the number of elements in $S_{" + np + "}$ of order $" + np.ptr.data.p + "$. They come precisely from $" + np.ptr.data.p + "$-cycles, of which there are $$\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-1)!$$ Since each such element is in precisely one " + sylow(np.ptr.data.p) + " of $S_{" + np.ptr.data.p + "}$, and each " + sylow(np.ptr.data.p) + " has exactly $" + (np.ptr.data.p - 1) + "$ elements of order $" + np.ptr.data.p + "$, there are $\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-2)!$ " + sylow(np.ptr.data.p) + "s.</p><p>From the Sylow theorems, we know that $\\left|N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})$, which contradicts Lagrange's theorem.</p>";
     }
 
     else if(np.other == np.norm){
-        return pf + "We will show that for divisibility reasons, this cannot be.</p><p>We can explicitly count the number of elements in $S_{" + np + "}$ of order $" + np.ptr.data.p + "$. They come precisely from $" + np.ptr.data.p + "$-cycles, of which there are $$\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-1)!$$ Since each such element is in precisely one " + sylow(np.ptr.data.p) + " of $S_{" + np.ptr.data.p + "}$, and each " + sylow(np.ptr.data.p) + " has exactly $" + (np.ptr.data.p - 1) + "$ elements of order $" + np.ptr.data.p + "$, there are $\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-2)!$ " + sylow(np.ptr.data.p) + "s.</p><p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. Moreover, we know that $G$ embeds into $A_{" + np + "}$, lest $G\\cap A_{" + np + "}\\lhd G$. So $N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}) = " + (np.other/2) + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $N_G(P_{" + np.ptr.data.p + "})\\le N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "})$, which contradicts Lagrange's theorem.</p>"
+        return pf + "We will show that for divisibility reasons, this cannot be.</p><p>We can explicitly count the number of elements in $S_{" + np + "}$ of order $" + np.ptr.data.p + "$. They come precisely from $" + np.ptr.data.p + "$-cycles, of which there are $$\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-1)!$$ Since each such element is in precisely one " + sylow(np.ptr.data.p) + " of $S_{" + np.ptr.data.p + "}$, and each " + sylow(np.ptr.data.p) + " has exactly $" + (np.ptr.data.p - 1) + "$ elements of order $" + np.ptr.data.p + "$, there are $\\binom{" + np + "}{" + np.ptr.data.p + "}\\cdot (" + np.ptr.data.p + "-2)!$ " + sylow(np.ptr.data.p) + "s.</p><p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. Moreover, we know that $G$ embeds into $A_{" + np + "}$, lest $G\\cap A_{" + np + "}\\lhd G$. So $N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}) = " + (np.other/2) + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $N_G(P_{" + np.ptr.data.p + "})\\le N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "})$, which contradicts Lagrange's theorem.</p>";
     }
 }
 
@@ -282,15 +285,17 @@ TechNormInSym.test = function(n, p, np){
             //FIXME
 
             //at least for now, not even sure if this is legit
-            if(gcd(m, np.ptr.data.smallestNP()) == 1 || m > np.ptr.data.smallestNP())
+            //FIXME this is blatantly incorrect
+            if(gcd(m, np.ptr.data.smallestNP()) == 1 || m > np.ptr.data.smallestNP()){
                 return true;
+            }
         }
         np.ptr = np.ptr.next;
     }
 
 }
 TechNormInSym.proof = function(n, p, np){
-    return "BOOM";
+    return "BOOM "+n + "   " + p + " " + np + "<br>normalizer size is " + (new Num(n.n/np.np)) + "<br>x=" + n.n/np.ptr.data.smallestNP();
 }
 
 

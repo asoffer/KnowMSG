@@ -23,6 +23,9 @@ function Num(n){
     this.proofComplete = false;
     this.proof = "";
     this.proofShown = false;
+
+    //list of all the options that have worked. some may be unnecessary in a final proof. FIXME later. its fine for a first version.
+    this.workedOptions = new List();
 }
 
 
@@ -201,13 +204,28 @@ Num.prototype = {
         if(this.proofComplete){
             this.proof += pf_basic(this, this.needSmart);
 
-            var ptr = this.primes.head.next;
-            while(ptr != this.primes.head){
-                this.proof += ptr.data.showProof();
+            /*
+               var ptr = this.primes.head.next;
+               while(ptr != this.primes.head){
+               this.proof += ptr.data.showProof();
 
-                ptr = ptr.next;
+               ptr = ptr.next;
+               }
+               */
+
+            if(this.workedOptions.size == 1){
+                this.proof += this.workedOptions.first().proof;
+            }
+            else{
+                var ptr = this.workedOptions.head.next;
+                while(ptr != this.workedOptions.head){
+                    this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+
+                    ptr = ptr.next;
+                }
             }
 
+            $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 
             /*
             //if we actually have a proof
@@ -237,11 +255,18 @@ Num.prototype = {
 
             var emel = "asoffer";
             this.proof += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
-            var ptr = this.primes.head.next;
+            //var ptr = this.primes.head.next;
 
             this.proof += pf_basic(this, this.divInject != this.smartInject);
 
             var str = "";
+            var ptr = this.workedOptions.head.next;
+            while(ptr != this.workedOptions.head){
+                this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+
+                ptr = ptr.next;
+            }
+/*
             while(ptr != this.primes.head){
                 str += ptr.data.showProof();
 
@@ -251,7 +276,7 @@ Num.prototype = {
                 //then add on the final results if anything was added on
                 this.proof += str;// + "FINISH ME";
             }
-
+*/
         }
 
         this.proofShown = true;
