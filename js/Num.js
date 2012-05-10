@@ -349,7 +349,7 @@ Num.prototype = {
         var ptr = this.primes.head.next;
 
         while(ptr != this.primes.head){
-            if(this.kModM(1,ptr.data.p).size != 1)
+            if(this.kModM(1,ptr.data.p).size != 1 || ptr.data.pow > 1)
                 return false;
 
             ptr = ptr.next;

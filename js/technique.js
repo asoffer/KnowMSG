@@ -290,7 +290,6 @@ TechNormInSym.test = function(n, p, np){
             var a = x.np * p1i % p2;
             var b = x.np * p2i % p1;
 
-            console.log(a,b,p1,p2,p1i,p2i,x.np,norm)
             if((a*b == 0 && a+b != 0) || a * p1 + b * p2 != x.np)
                 return true;
 
