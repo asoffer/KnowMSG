@@ -70,7 +70,7 @@ $("#number_in").keyup(function(e){
         setListExpandDisplay();
     });
 
-
+/*
 var x = 1;
 var counter = new List();
 while(x <= 10000){
@@ -84,7 +84,7 @@ while(x <= 10000){
 }
 
 console.log("" + counter);
-
+*/
 });
 
 function solve(x){

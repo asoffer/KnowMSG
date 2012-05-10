@@ -289,8 +289,13 @@ TechNormInSym.test = function(n, p, np){
             //x.np = p1 * a + p2 * b
             var a = x.np * p1i % p2;
             var b = x.np * p2i % p1;
+            if(a == 0)
+                a = p2;
+            if(b == 0)
+                b = p1;
 
-            if((a*b == 0 && a+b != 0) || a * p1 + b * p2 != x.np)
+            var c = a * p1 + b * p2;
+            if(c != x.np)
                 return true;
 
         }
@@ -300,8 +305,7 @@ TechNormInSym.test = function(n, p, np){
 
 }
 TechNormInSym.proof = function(n, p, np){
-    return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ", and let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + ". The normalizer $N_G(P_{" + p + "})$ has order $" + n.n/np.np + "$, and therefore must be cyclic, so we can pick $g\\in G$ to be an element of order $" + n.n/np.np + "$. Since $" + n.n/np.np + "$ does not divide $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "}=" + (n/np.ptr.data.smallestNP()) + "$, the group element $g$ cannot normalize $P_{" + np.ptr.data.p + "}$, nor any other " + sylow(np.ptr.data.p) + ". Thus, if we identify $g$ with its action on the " + np.ptr.data.smallestNP() + " " + sylow(np.ptr.data.p) + ", we see that we have produced an element in $S_{" + np.ptr.data.smallestNP() + "}$ of order $" + n.n/np.np + "$ which has no fixed points. It is routine to check that no such element can exist.</p>";
-    //return "BOOM "+n + "   " + p + " " + np + "<br>normalizer size is " + (new Num(n.n/np.np)) + "<br>x=" + n.n/np.ptr.data.smallestNP(); + "<br>";
+    return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ", and let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + ". The normalizer $N_G(P_{" + p + "})$ has order $" + n.n/np.np + "$, and therefore must be cyclic, so we can pick $g\\in G$ to be an element of order $" + n.n/np.np + "$. Since $" + n.n/np.np + "$ does not divide $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "}=" + (n/np.ptr.data.smallestNP()) + "$, the group element $g$ cannot normalize $P_{" + np.ptr.data.p + "}$, nor any other " + sylow(np.ptr.data.p) + ". Thus, if we identify $g$ with its action on the $" + np.ptr.data.smallestNP() + "$ " + sylow(np.ptr.data.p) + ", we see that we have produced an element in $S_{" + np.ptr.data.smallestNP() + "}$ of order $" + n.n/np.np + "$ which has no fixed points. It is routine to check that no such element can exist.</p>";
 }
 
 //------------------------------

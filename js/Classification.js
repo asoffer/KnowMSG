@@ -215,7 +215,7 @@ simpleRee2.logBound = 26;
 
 var simpleRee3 = new Simple();
 simpleRee3.name = "Ree group";
-simpleRee3.exception = function(n,q){ return this.nn < 1; };
+simpleRee3.exception = function(n,q){ return this.nn < 3; };
 simpleRee3.sym = function(n,q){ return "{}^2G_2(3^{" + this.nn + "})"; };
 simpleRee3.fn = function(n,q){ 
     //for saving n;
