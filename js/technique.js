@@ -218,8 +218,8 @@ TechDNorm.test = function(n, p, np){
 
 TechDNorm.proof = function(n, p, np){
     var exp = "";
-    if(np.ptr.data.pow > 1)
-        exp = "^{" + np.ptr.data.pow + "}";
+    if(p.pow > 1)
+        exp = "^{" + p.pow + "}";
 
     return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ". Then $N_G(P_{" + p + "})$ is a group of order $" + (n.n/np) + "$, and therefore has a " + sylow(np.ptr.data.p) + ", $P_{" + np.ptr.data.p + "}$. It is clear that $P_{" + np.ptr.data.p + "}$ is also a " + sylow(np.ptr.data.p) + " of $G$. Applying the Sylow counting technique to the group $N_G(P_{" + p + "})$, tells us that it contains exactly one " + sylow(np.ptr.data.p) + ", so $P_{" + np.ptr.data.p + "}\\lhd N_G(P_{" + p + "})$. Since every element of $P_{" + p + "}$ conjugates $P_{" + np.ptr.data.p + "}$ to itself, $P_{" + p + "}\\le N_G(P_{" + np.ptr.data.p + "})$. This means that $" + p + exp + "$ must divide the order of $N_G(P_{" + np.ptr.data.p + "})$. But we already know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "} = " + (n.n/np.ptr.data.smallestNP()) + "$, a contradiction.</p>";
 }
@@ -283,15 +283,15 @@ TechNormInSym.test = function(n, p, np){
         var p2i = modInverse(p2,p1);
 
         //can i write it as a combination?
-        if(p1i && p2i && np.ptr.data.np.size == 1 && y % norm.n != 0){
+        if(p1i && p2i && np.ptr.data.np.size == 1 && y % norm.n != 0 && norm.n != x.np){
 
             //now we want to write
             //x.np = p1 * a + p2 * b
             var a = x.np * p1i % p2;
             var b = x.np * p2i % p1;
 
-            console.log(a,b);
-            if(a == 0 || b == 0 || a * p1 + b * p2 != x.np)
+            console.log(a,b,p1,p2,p1i,p2i,x.np,norm)
+            if((a*b == 0 && a+b != 0) || a * p1 + b * p2 != x.np)
                 return true;
 
         }

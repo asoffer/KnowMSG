@@ -69,7 +69,7 @@ Prime.prototype = {
             TechLI.apply(this.n, this, ptr.data);
             TechDP.apply(this.n, this, ptr.data);
             TechNormInSym.apply(this.n, this, ptr.data);
-            TechWacky.apply(this.n, this, ptr.data);
+//            TechWacky.apply(this.n, this, ptr.data);
 
             flag = flag || (b!=ptr.data.proofComplete);
 
