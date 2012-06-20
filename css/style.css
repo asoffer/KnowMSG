@@ -10,7 +10,16 @@ body{
     padding: 0;
     position: absolute;
     top: 30px;
+}
 
+#fsg{
+    background: #ededed;
+    text-align: right;
+    padding: 10px 10px 15px 2px;
+    margin: 20px 0px 0px 0px;
+    border: 1px solid #999;
+    width: 430px;
+    height: 330px;
 }
 
 h1{

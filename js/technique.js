@@ -354,7 +354,7 @@ TechSimple.test = null;
 
 TechPrimes = new Technique("prime or prime power", true, 2);
 TechPrimes.test = function(n){ return (n.isPrime() || n.isPrimePower()); }
-TechPrimes.proof = function(n){ return (n.isPrime() ? pf_prime(n.n) : pf_prime_power(n.primes.first().p, n.n)); }
+TechPrimes.proof = function(n){ return (n.isPrime() ? pf_prime(n.n)+(n.n == 2 ? "<center><div id = \"fsg\" class = \"ui-corner-all\"><iframe width=\"420\" height=\"315\" src=\"http://www.youtube.com/embed/UTby_e4-Rhg?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe><br>Finite Simple Group (of Order Two)<br><a href = \"http://www.casa.org/node/2044\">Klein Four Group</a></div></center>" : "") : pf_prime_power(n.primes.first().p, n.n)); }
 
 TechSylow = new Technique("does n_p only have one option", true);
 TechSylow.test = function(n){
