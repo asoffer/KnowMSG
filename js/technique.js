@@ -35,7 +35,7 @@ Technique.prototype = {
                 var v = $("#inner_statement");
                 switch(this.displayCode){
                     case 0:
-                        v.html("<p>There are no simple groups of order $" + n + "$.</p>");
+                        v.html("<p>There are no simple groups of order $" + n + "=" + showFactorization(n) + "$.</p>");
                         break;
                     case 1:
                         v.html("<p>There is a simple group of order $" + n + "$.</p>");
@@ -83,7 +83,7 @@ TechLI.test = function(n, p, np){
     np.ptr = np.ptr.next;
     np.exp = "";
     if(p.pow > 2)
-        np.exp = "^{" + (p.pow + 1) + "}";
+        np.exp = "^{" + (p.pow - 1) + "}";
     //now we know there are two sylow subgroups with large intersection.
     //both p and q are in the normalize of their intersection
     return (n.n/ np.ptr.data < n.divInject);
@@ -106,7 +106,7 @@ TechLAI.test = function(n, p, np){
 
     np.ptr = np.ptr.next;
 
-    return (n.n/np.ptr.data < n.divInject);
+    return (n.n/np.ptr.data <= n.smartInject);
 
 }
 TechLAI.proof = function(n, p, np){
@@ -117,26 +117,59 @@ TechLAI.proof = function(n, p, np){
     var ptr2 = n.primes.head.next;
     while(ptr2 != n.primes.head){
         if(ptr2.data.p != p.p && ptr2.data.pow == 1){
-            proof += "$$" + ptr2.data.smallestNP() + "\\cdot(" + ptr2.data.toStringWithPower() + " - 1)=" + ptr2.data.smallestNP().np * (Math.pow(ptr2.data.p, ptr2.data.pow) - 1) + "\\mbox{ elements of order }" + ptr2.data.p + "$$\n";
+            pf += "$$" + ptr2.data.smallestNP() + "\\cdot(" + ptr2.data.toStringWithPower() + " - 1)=" + ptr2.data.smallestNP().np * (Math.pow(ptr2.data.p, ptr2.data.pow) - 1) + "\\mbox{ elements of order }" + ptr2.data.p + "$$\n";
 
             counter += ptr2.data.smallestNP().np * (Math.pow(ptr2.data.p, ptr2.data.pow) - 1);
         }
         ptr2 = ptr2.next;
     }
 
-    pf += "</p><p>Furthermore, for the primes $p$ such that $p^2$ divides $\\left|G\\right|$, there are at least two Sylow $p$-subgroups $P$ and $Q$. While they may have nontrivial intersection, if we are looking for a lower bound on the number of elements in Sylow $p$ subgroups of $G$, we must get $p^m$ elements from $P$ (where $p^m$ divides $\\left|G\\right|$, but $p^{m+1}$ does not), and at least one more element from $Q$. Thus, we get at very least";
+    pf += "</p><p>Furthermore, for the primes $p$ such that $p^2$ divides $\\left|G\\right|$, there are at least two Sylow $p$-subgroups $P$ and $Q$. While they may have nontrivial intersection, if we are looking for a lower bound on the number of elements in " + sylow(p) + " of $G$, we must get $p^m$ elements from $P$ (where $p^m$ divides $\\left|G\\right|$, but $p^{m+1}$ does not), and at least one more element from $Q$. Thus, we get at very least";
 
     ptr2 = n.primes.head.next;
     while(ptr2 != n.primes.head){
         if(ptr2.data.p != p.p && ptr2.data.pow > 1){
-            proof += "$$" + ptr2.data.smallestNP() + "\\cdot(" + ptr2.data + " - 1)=" + ptr2.data.smallestNP().np * (ptr2.data.p - 1) + "\\mbox{ elements of order }" + ptr2.data.p + "^k$$\n";
+            pf += "$$" + ptr2.data.smallestNP() + "\\cdot(" + ptr2.data + " - 1)=" + ptr2.data.smallestNP().np * (ptr2.data.p - 1) + "\\mbox{ elements of order }" + ptr2.data.p + "^k$$\n";
             counter += ptr2.data.smallestNP().np * (ptr2.data.p - 1);
         }
         ptr2 = ptr2.next;
     }
 
-    return pf + "for a total of $" + counter + "$ elements.</p><p>Then the " + sylow(p) + " subgroups cannot have trivial intersection, lest there be another $" + np + "\\cdot(" + p + "^{" + p.pow + "} - 1)$ elements. So there must be two distinct " + sylow(p) + "s of $G$, $P$ and $Q$, such that $[P:P\\cap Q]&lt; p^2$. As this index must be a power of $" + p + "$, and $P\\ne Q$, the index must be $" + p + "$. That is, $\\left|P\\cap Q\\right|=" + p + "$.</p><p>Since every group of order $" + p.toStringWithPower() + "$ is abelian, $P\\cap Q\\lhd P$, so $P\\le N_G(P\\cap Q)$. Similarly, $Q\\le N_G(P\\cap Q)$, so $PQ\\subseteq N_G(P\\cap Q)$. We can therefore bound the size of the normalizer by $$\\left|N_G(P\\cap Q)\\right|\\ge\\left|PQ\\right|=\\frac{\\left|P\\right|\\cdot\\left|Q\\right|}{\\left|P\\cap Q\\right|}=" + p + "^{" + (p.pow + 1) + "}.$$ We also know that $P\\le N_G(P\\cap Q)$, so $\\left|N_G(P\\cap Q)\\right|$ is a divisor of $\\left|G\\right|$ which has $\\left|P\\right|=" + p.p + "^{" + p.pow + "}$ as a proper divisor. Then it is easily verified that $\\left|N_G(P\\cap Q)\\right|$ is at least $" + np.ptr.data + "$. But then $N_G(P\\cap Q)$ is a subgroup of $G$ of index no more than $" + (n.n/np.ptr.data) + "$. Since $G$ acts transitively on the left cosets of $N_G(P\\cap Q)$ by left multiplication, we have a nontrivial map $\\phi: G\\to S_{" + (n.n/np.ptr.data) + "}$. Contradiction.</p>";
+    pf += "for a total of $" + counter + "$ elements.</p><p>Then the " + sylow(p) + " subgroups cannot have trivial intersection, lest there be another $" + np + "\\cdot(" + p + "^{" + p.pow + "} - 1)$ elements. So there must be two distinct " + sylow(p) + "s of $G$, $P$ and $Q$, such that $[P:P\\cap Q]&lt; " + p + "^2$. As this index must be a power of $" + p + "$, and $P\\ne Q$, the index must be $" + p + "$. That is, $\\left|P\\cap Q\\right|=" + p + "$.</p><p>Since every group of order $" + p.toStringWithPower() + "$ is abelian, $P\\cap Q\\lhd P$, so $P\\le N_G(P\\cap Q)$. Similarly, $Q\\le N_G(P\\cap Q)$, so $PQ\\subseteq N_G(P\\cap Q)$. We can therefore bound the size of the normalizer by $$\\left|N_G(P\\cap Q)\\right|\\ge\\left|PQ\\right|=\\frac{\\left|P\\right|\\cdot\\left|Q\\right|}{\\left|P\\cap Q\\right|}=" + p + "^{" + (p.pow + 1) + "}.$$ We also know that $P\\le N_G(P\\cap Q)$, so $\\left|N_G(P\\cap Q)\\right|$ is a divisor of $\\left|G\\right|$ which has $\\left|P\\right|=" + p.p + "^{" + p.pow + "}$ as a proper divisor. Then the possibilities for $\\left|N_G(P\\cap Q)\\right|$ are $$";
 
+    var pe = Math.pow(p.p, p.pow);
+    var x = new Num(n.n/pe);
+    x.computeFactorList();
+    var l = x.factors.copy();
+    while(l.first() < p.p)
+        l.popFront();
+
+    var ptr = l.head.next;
+    while(ptr != l.head){
+        ptr.data = ptr.data * pe;
+        ptr = ptr.next;
+    }
+
+    var c = 0;
+    var ptr = l.head.next;
+    while(ptr != l.head){
+        if(n.n/ptr.data < n.smartInject)
+            ++c;
+        ptr = ptr.next;
+    }
+
+    if(c == l.size)
+        pf += toList(l, false).s + "$$ All $" + c + "$ of these are excluded";
+    else 
+        pf += toList(l, false).s + "$$ The last $" + c + "$ are excluded,";
+
+    pf += " since in each case the index $[G:N_G(P\\cap Q)]$ would be less than $" + n.smartInject + "$. This is a problem because if we have a subgroup $H$ of $G$ with index less than $" + n.smartInject + "$, then $G$ acts by left multiplication on the left cosets, which induces a nontrivial map from $G$ into $S_{[G:H]}$, which we know cannot exist when $[G:H] &lt;" + n.smartInject + "$.";
+
+    if(c == l.size)
+        return pf + "Thus, there can be no simple groups of order $" + n.n + "$.</p>";
+
+    //otherwise there is one more case FIXME
+    return pf + "</p><p>Now we may assume $N_G(P\\cap Q)$ is a subgroup of $G$ of order $" + l.first() + "$. Since there are exactly $" + np.ptr.data + "$ elements which do not belong to " + sylow(n.n/np.ptr.data) + ", and $N_G(P\\cap Q)$ always conjugates to a subgroup of order $" + np.ptr.data + "$, it must always conjugate to itself, and hence must be normal. Contradiction.</p>";
 }
 
 //FINISH ME, WHEN DO I NEED WHAT FOR COUNTING
@@ -243,11 +276,11 @@ TechSymDiv.proof = function(n, p, np){
 
 
         if(np.other % np.norm != 0){
-            return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np.ptr.data.p + "}}(P_{" + np.ptr.data.p + "}),$$ which contradicts Lagrange's theorem.</p>";
+            return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "}),$$ which contradicts Lagrange's theorem.</p>";
         }
 
         else if(np.other == np.norm){
-            return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. Moreover, we know that $G$ embeds into $A_{" + np + "}$, lest $G\\cap A_{" + np + "}\\lhd G$. So $N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}) = " + (np.other/2) + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "})$$, which contradicts Lagrange's theorem.</p>";
+            return pf + "<p>From the Sylow theorems, we know that $\\left|N_{S_{" + np + "}}(P_{" + np.ptr.data.p + "})\\right|=" + np.other + "$. Moreover, we know that $G$ embeds into $A_{" + np + "}$, lest $G\\cap A_{" + np + "}\\lhd G$. So $N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}) = " + (np.other/2) + "$. We also know that $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + np.norm + "$. However, $$N_G(P_{" + np.ptr.data.p + "})\\le N_{A_{" + np + "}}(P_{" + np.ptr.data.p + "}),$$ which contradicts Lagrange's theorem.</p>";
         }
 }
 
@@ -305,27 +338,8 @@ TechNormInSym.test = function(n, p, np){
 
 }
 TechNormInSym.proof = function(n, p, np){
-    return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ", and let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + ". The normalizer $N_G(P_{" + p + "})$ has order $" + n.n/np.np + "$, and therefore must be cyclic, so we can pick $g\\in G$ to be an element of order $" + n.n/np.np + "$. Since $" + n.n/np.np + "$ does not divide $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "}=" + (n/np.ptr.data.smallestNP()) + "$, the group element $g$ cannot normalize $P_{" + np.ptr.data.p + "}$, nor any other " + sylow(np.ptr.data.p) + ". Thus, if we identify $g$ with its action on the $" + np.ptr.data.smallestNP() + "$ " + sylow(np.ptr.data.p) + ", we see that we have produced an element in $S_{" + np.ptr.data.smallestNP() + "}$ of order $" + n.n/np.np + "$ which has no fixed points. It is routine to check that no such element can exist.</p>";
-}
-
-//------------------------------
-
-TechWacky = new Technique("wacky420");
-TechWacky.test = function(n, p, np){
-    np.ptr = n.primes.head.next;
-    while(np.ptr != n.primes.head){
-        var norm = new Num(n.n/np.np);
-        norm.computeFactorList();
-        if(np.np % np.ptr.data.p == 0 && np.ptr.data.p != p.p && norm.kModM(1, np.ptr.data.p).size == 1)
-            return true;
-
-        np.ptr = np.ptr.next;
-    }
-
-    return false;
-}
-TechWacky.proof = function(n, p, np){
-    return "FIXME WACKY:" + np.np + "   " + np.ptr.data.p + "   " + p.p + " " + n.n/np.np;
+    var x = new Num(n.n/np.np);
+    return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ", and let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + ". The normalizer $N_G(P_{" + p + "})$ has order $" + n.n/np.np + "$, and therefore must be cyclic, so we can pick $g\\in G$ to be an element of order $" + n.n/np.np + "$. Since $" + n.n/np.np + "$ does not divide $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "}=" + (n/np.ptr.data.smallestNP()) + "$, the group element $g$ cannot normalize $P_{" + np.ptr.data.p + "}$, nor any other " + sylow(np.ptr.data.p) + ". Thus, if we identify $g$ with its action on the $" + np.ptr.data.smallestNP() + "$ " + sylow(np.ptr.data.p) + ", we see that we have produced an element in $S_{" + np.ptr.data.smallestNP() + "}$ of order $" + n.n/np.np + "$ which has no fixed points.</p><p>Consider the cycle structure of $g$. If we say that $g$ has $a$ $" + x.primes.first().p + "$-cycles, and $b$ $" + x.primes.last().p + "$-cycles, we would need to find a solution to the Diophantine equation $$" + x.primes.first().p + "a+" + x.primes.last().p + "b=" + np.ptr.data.smallestNP() + ",$$ with $a,b&gt;0$. It is routine to check that no such solution exists.</p>";
 }
 
 TechOne = new Technique("is it one?", true, 1);
@@ -369,4 +383,92 @@ TechInjectBound.test = function(n, b){
 }
 TechInjectBound.proof = function(n){
     return pf_inject(n, n.ptr.data);
+}
+
+TechNC = new Technique("proof using NC and self-normalization");
+TechNC.test= function(n, p, np){
+    if(p.pow != 2 || n.primes.size != 2)
+        return false;
+
+    //show they intersect trivially
+    //if not, normalizer has size at least p^3
+    //find smallest factor larger than p^3
+    var ptr = n.factors.head.next;
+    while(ptr.data < Math.pow(p.p, 3) || ptr.data % p.p != 0){
+        ptr = ptr.next;
+    }
+    n.k = ptr.data;
+
+    //lower bound on the size of C_G(P_1 n P_2). size-order as well as div-order
+    var k = ptr.data / (p - 1);
+
+    while(k % p.p == 0)
+        k /= p.p;
+
+    n.x = new Num(k);
+    n.x.computeFactorList();
+    //there exists an element of this order
+    var y = n.x.primes.first();
+
+    n.ptr = n.primes.head.next;
+    while(n.ptr != n.primes.head){
+        n.j = n.n / n.ptr.data.smallestNP().np;
+        if(n.j % (p.p * y.n) != 0 && n.ptr.data.np.size == 1)
+            if(!findElementInAlt(p.p * y.n, n.ptr.data.np.first().np))
+                return true;
+
+        //check if i can find such an element
+        n.ptr = n.ptr.next; 
+    }
+
+    return false;
+
+}
+TechNC.proof = function(n, p, np){
+    return "<p>We first show that all " + sylow(p) + " intersect trivially. Suppose, by way of contradiction, that $P$ and $P'$ are distinct " + sylow(p) + " with nontrivial intersection $Q$. Then $\\left|Q\\right|=" + p + "$, and $Q\\lhd P$ and $Q\\lhd P'$. Thus, we can bound the size of the normalizer by $$\\left|N_G(P\\cap P')\\right|\\ge\\left|P\\cdot P'\\right|=\\frac{\\left|P\\right|\\cdot\\left|P'\\right|}{\\left|P\\cap P'\\right|}=" + p + "^3.$$ Thus, $\\left|N_G(Q)\\right|$ is at least $" + p + "^3$ and is divisible by $" + p + "$. The smallest such divisor of $" + n + "$ is $" + n.k + "$. Since $" + n + "$ is only divisible by two primes, every possible size of $N_G(Q)$ is divisible by $" + n.k + "$.</p><p>Recall that $Q\\cong\\mathbb Z/" + p.p + "\\mathbb Z$, so $\\mbox{Aut}(Q)" + (p.p == 2 ? "$ is trivial" : "\\cong\\mathbb Z/" + (p.p-1) +"\\mathbb Z$") + ". Since $N_G(Q)/C_G(Q)$ is isomorphic to a subgroup of $\\mbox{Aut}(Q)$ by the isomorphism $$g\\cdot C_G(Q)\\mapsto (x\\mapsto g^{-1}xg),$$ we deduce that $C_G(Q)$ is divisible by $" + n.k + "/" + (p.p - 1) + "=" + (n.k/(p.p-1)) + "$. In particular, if we take $x$, a generator for $Q$, and $y$, an element of order $" + n.x.primes.first().p + "$, we can see that $xy\\in C_G(Q)$ is an element of order $" + (p.p * n.x.primes.first().p) + "$ in $G$.</p><p>Now let $P_{" + n.ptr.data + "}$ denote a " + sylow(n.ptr.data.p) + ". Since $\\left|N_G(P_{" + n.ptr.data + "})\\right|=" + n.j + "$, our element $xy$ cannot normalize $P_{" + n.ptr.data + "}$. The action of $G$ by conjugation on the " + sylow(n.ptr.data) + " induces a nontrivial map $$\\phi:G\\to S_{" + n.ptr.data.np.first() +"}.$$ As before, $\\phi$ must be injective lest its kernel be a nontrivial normal subgroup of $G$. Thus, we can identify $G$ with its image under $\\phi$. Since $A_{" + n.ptr.data.np.first() + "}\\lhd S_{" + n.ptr.data.np.first() + "}$, we know that $G\\cap A_{" + n.ptr.data.np.first() + "}\\lhd G$, implying that in fact $G&lt;A_{" + n.ptr.data.np.first() + "}$. Because $N_G(P_2)$ is the subgroup that fixes a particular point, our element $xy$ of order $" + (p.p * n.x.primes.first().p) + "$ cannot have any fixed points, and must be an even permutation. We can enumerate all possible cycle structures for $xy$ to see that no such element exists.</p>";
+}
+
+TechNC2 = new Technique("proof using NC, number 2");
+TechNC2.test = function(n, p, np){
+    //n=420, p=7, np=15
+    if(p.pow != 1)
+        return false;
+
+    var norm = n.n/np.np;
+    var g = new Num(gcd(norm, p.p - 1));
+
+    //okay, we probably killed some stuff here we know how to deal with, but this is just being safe.
+    if(g.primes.size != 1)
+        return false;
+
+    //centralizer is at least this size. moreover, there is an element in the centralizer of this order
+    n.cent = norm / Math.pow(g.primes.first().p, g.primes.first().pow);
+
+    var c = new Num(n.cent);
+    if(c.primes.size != 2)
+        return false;
+
+    n.ptr = n.primes.head.next;
+    while(n.ptr != n.primes.head){
+        n.j = n.n / n.ptr.data.smallestNP().np;
+        if(n.j % n.cent != 0 && n.ptr.data.np.size == 1)
+            if(!findElementInAlt(n.cent, n.ptr.data.np.first().np))
+                return true;
+
+        //check if i can find such an element
+        n.ptr = n.ptr.next; 
+    }
+
+    return false;
+
+}
+TechNC2.proof = function(n, p, np){
+    return "<p>Let $P$ be a " + sylow(p) + ". Recall that $\\mbox{Aut}(P)" + (p.p == 2 ? "$ is trivial" : "\\cong\\mathbb Z/" + (p.p-1) +"\\mathbb Z$") + ". Since $N_G(P)/C_G(P)$ is isomorphic to a subgroup of $\\mbox{Aut}(P)$ by the isomorphism $$g\\cdot C_G(P)\\mapsto (x\\mapsto g^{-1}xg),$$ we deduce that $C_G(P)$ is divisible by $" + n.cent + "$. In particular, if we take $x$, a generator for $P$, and $y$, an element of order $" + (n.cent/p.p) + "$, we can see that $xy\\in C_G(Q)$ is an element of order $" + n.cent + "$ in $G$.</p><p>Now let $P_{" + n.ptr.data + "}$ denote a " + sylow(n.ptr.data.p) + ". Since $\\left|N_G(P_{" + n.ptr.data + "})\\right|=" + n.j + "$, which is not divisible by $" + n.cent + "$, our element $xy$ cannot normalize $P_{" + n.ptr.data + "}$. The action of $G$ by conjugation on the " + sylow(n.ptr.data) + " induces a nontrivial map $$\\phi:G\\to S_{" + n.ptr.data.np.first() +"}.$$ As before, $\\phi$ must be injective lest its kernel be a nontrivial normal subgroup of $G$. Thus, we can identify $G$ with its image under $\\phi$. Since $A_{" + n.ptr.data.np.first() + "}\\lhd S_{" + n.ptr.data.np.first() + "}$, we know that $G\\cap A_{" + n.ptr.data.np.first() + "}\\lhd G$, implying that in fact $G&lt;A_{" + n.ptr.data.np.first() + "}$. Because $N_G(P_2)$ is the subgroup that fixes a particular point, our element $xy$ of order $" + n.cent + "$ cannot have any fixed points, and must be an even permutation. We can enumerate all possible cycle structures for $xy$ to see that no such element exists.</p>";
+}
+
+Tech720 = new Technique("720", true);
+Tech720.test = function(n){ return n.n == 720; };
+Tech720.proof = function(n){
+    n.computeFactorList();
+return "<div class=\"ui-state-highlight ui-corner-all\" style=\"margin-top: 0px; margin-bottom: 20px; padding: 1em .7em; font-size: 10pt;\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span><strong>Disclaimer:</strong> This proof is not my own work. It follows very closely the proof by Derrick Holt, found <a href = \"http://sci.tech-archive.net/Archive/sci.math/2006-12/msg07456.html\">here</a>.</div>" + pf_basic(n, false) + "<p></p><h6>Case $n_3=40$:</h6><p>Let $P$ be a " + sylow(3);
 }

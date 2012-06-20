@@ -65,11 +65,12 @@ Prime.prototype = {
             TechCount.apply(this.n, this, ptr.data);
             TechDNorm.apply(this.n, this, ptr.data);
             TechSymDiv.apply(this.n, this, ptr.data);
+            TechNormInSym.apply(this.n, this, ptr.data);
             TechLAI.apply(this.n, this, ptr.data);
             TechLI.apply(this.n, this, ptr.data);
             TechDP.apply(this.n, this, ptr.data);
-            TechNormInSym.apply(this.n, this, ptr.data);
-//            TechWacky.apply(this.n, this, ptr.data);
+            TechNC2.apply(this.n, this, ptr.data);
+            TechNC.apply(this.n, this, ptr.data);
 
             flag = flag || (b!=ptr.data.proofComplete);
 
@@ -86,58 +87,5 @@ Prime.prototype = {
 
         this.proofComplete = true;
         return false;
-    },
-
-    showProof: function(){
-        var pf = "";
-
-        //okay, for now, just dump everything and don't even worry about the order
-        var ptr = this.np.head.next;
-        while(ptr != this.np.head){
-            pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-            ptr = ptr.next;
-        }
-
-        return pf;
     }
 };
-/*/
-
-  var pf = "";
-
-//if we have a proof
-if(this.proofComplete){
-
-//if there is only one, don't show the cases
-if(this.np.size == 1)
-return this.np.first().proof;
-
-//FIXME, lump cases together that can be
-var ptr = this.np.head.next;
-
-while(ptr != this.np.head){
-pf += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-ptr = ptr.next;
-}
-
-return pf;
-}
-
-else{
-var str = ""
-var ptr = this.np.head.next;
-while(ptr != this.np.head){
-if(ptr.data.proofComplete)
-str += "<h6>Case $n_{" + this.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-ptr = ptr.next;
-}
-
-return str;
-}
-
-}
-};
-*/

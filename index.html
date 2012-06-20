@@ -1,3 +1,4 @@
+
 <html>
     <head>
         <title> NoMSG | No More Simple Groups</title>
@@ -25,7 +26,6 @@
 
         <!-- load everything else -->
         <script src = "js/List.js"></script>
-        <script src = "js/Technique.js"></script>
         <script src = "js/Option.js"></script>
         <script src = "js/Prime.js"></script>
         <script src = "js/Num.js"></script>
@@ -34,10 +34,10 @@
         <script src = "js/misc.js"></script>
         <script src = "js/Proofs.js"></script>
         <script src = "js/main.js"></script>
+        <script src = "js/technique.js"></script>
         <!--<script src = "js/nomsg.min.js"></script>-->
     </head>
     <body>
-
         <div id = "content">
             <p id = "version"></p>
             <h1>NoMSG $|$ No More Simple Groups</h1>
@@ -51,7 +51,6 @@
                 <button id = "go">Go!</button>
 
                 <button id = "about">About NoMSG</button>
-                <!--<button id = "tech">Techniques used</button>-->
             </div>
 
             <div id = "message" class = "dialog"></div>
@@ -60,7 +59,10 @@
                 <div id = "inner_statement" class = "ui-widget-content ui-corner-all"></div>
             </div>
 
-            <div id = "proof" class = "ui-widget-content ui-corner-all"></div>
+            <div id = "proof" class = "ui-widget-content ui-corner-all">
+                <h1>Never used NoMSG before?</h1>
+                <p>No problem. It's super easy. See where it says <i>"Pick a number...?"</i> Type any number in that box and click <i>"Go!"</i> NoMSG will either spit out a proof that no simple groups of that order exist, or it will find a simple group of that order.</p><p>In rare cases, it will fail to find a satisfactory proof, even though it knows no simple groups of that order exist. In that case, it will tell you so, and then give you as much information as it can about the what a simple group of that order would have to look like, where one to exist.</p>
+            </div>
 
             <div id = "credits" class = "ui-widget-header ui-corner-all">
                 <table><tr><td align="left"></td><td align="right">Code and proofs by <a href = "http://www.math.ucla.edu/~asoffer">Andy Soffer</a></td></tr></table>

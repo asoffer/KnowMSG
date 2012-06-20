@@ -152,3 +152,31 @@ function modInverse(a,m){
     else
         return a % m;
 }
+
+//look for an element of order o in A_a
+//this is only used for elements of order p*q, thus far, so i'll only code it to do that FIXME
+function findElementInAlt(o,a){
+    var x = new Num(o);
+    x.factor();
+    var p1 = x.primes.first().p
+        var p2 = x.primes.last().p;
+
+    //make it even
+    if(p1 == 2)
+        p1 = 4;
+
+    if(p1 * p2 < a)
+        return true;
+
+    var p1i = modInverse(p1,p2);
+    var p2i = modInverse(p2,p1);
+
+
+    var y = (p1i * a) % p2;
+    var z = (p2i * a) % p1;
+
+    if(y == 0 || z == 0)
+        return false;
+
+    return y * p1 + z * p2 == a;
+}

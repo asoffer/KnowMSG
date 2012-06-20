@@ -8,8 +8,13 @@ function Num(n){
     if(Math.log(this.n) > 40){
         this.proofComplete = true;
         this.proofShown = true;
-        $("#inner_statement").html("<p>Unfortunately the input is to big for me to handle.</p>");
-        $("#proof").html("<p></p>");
+        if(sporadicTest(this, true)){
+            return;
+        }
+        else{
+            $("#inner_statement").html("<p>Unfortunately the input is to big for me to handle.</p>");
+            $("#proof").html("<p></p>");
+        }
         return;
     }
 
@@ -126,16 +131,12 @@ Num.prototype = {
         if(TechOne.apply(this) || sporadicTest(this) || TechPrimes.apply(this) || isSimple(this))
             return;
 
-        //$("#inner_statement").html("<p>Every group of order $" + this.n + "$ is simple.</p>");
-        //$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-
         //compute all the factors and build lists of potential n_p
         this.computeFactorList();
         this.buildNP();
 
         if(TechSylow.apply(this) || TechTwoOdd.apply(this))
             return;
-        //$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 
         //compute the injections
         this.computeInjections();
@@ -143,10 +144,7 @@ Num.prototype = {
         if(TechInjectBound.apply(this, this.divInject) || TechInjectBound.apply(this, this.smartInject))
             return;
 
-        //$("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-
-
-        //knock off np's too small for a div injection. if we need to
+       //knock off np's too small for a div injection. if we need to
         //do smart injection too. there's a question about wehether
         //this is simpler than some of the other arguments, but it's
         //much easier to do this check once than have some wacky
@@ -161,6 +159,11 @@ Num.prototype = {
             }
             ptr = ptr.next;
         }
+
+        //ugly cases
+        if(Tech720.apply(this))
+            return;
+
 
         var flag = true;
         while(flag && !this.proofComplete){
@@ -221,6 +224,12 @@ Num.prototype = {
             else{
                 var ptr = this.workedOptions.head.next;
                 while(ptr != this.workedOptions.head){
+                    //if it's from TechNC, then we win
+                    if(ptr.data.proof.substr(3,8) == "We first"){
+                        this.proof += ptr.data.proof;
+                        break;
+                    }
+
                     this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
 
                     ptr = ptr.next;
@@ -268,17 +277,17 @@ Num.prototype = {
 
                 ptr = ptr.next;
             }
-/*
-            while(ptr != this.primes.head){
-                str += ptr.data.showProof();
+            /*
+               while(ptr != this.primes.head){
+               str += ptr.data.showProof();
 
-                ptr = ptr.next;
+               ptr = ptr.next;
+               }
+               if(str != ""){
+            //then add on the final results if anything was added on
+            this.proof += str;// + "FINISH ME";
             }
-            if(str != ""){
-                //then add on the final results if anything was added on
-                this.proof += str;// + "FINISH ME";
-            }
-*/
+            */
         }
 
         this.proofShown = true;

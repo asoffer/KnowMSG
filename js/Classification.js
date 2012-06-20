@@ -292,10 +292,16 @@ var spor_sym = new Array("M_{11}","M_{12}", "M_{22}", "M_{23}", "M_{24}", "J_1",
 var spor_name = new Array("a Mathieu group","a Mathieu group","a Mathieu group","a Mathieu group","a Mathieu group","a Janko group","a Janko group","a Janko group","a Janko group","a Conway group","a Conway group","a Conway group","a Fischer Group","a Fischer Group","a Fischer Group","the Higman-Sims group","the McLaughlin group","the Held group","the Rudvalis group","the Suzuki sporadic group","the O'Nan group","the Harada-Norton group","the Lyons group","the Thompson group","the Baby Monster group","the Fischer-Griess Monster, or the monster group");
 
 
-function sporadicTest(num){
+function sporadicTest(num, b){
+    if(b === undefined)
+        b = false;
+
+    if(b)
+        num.n = GLOBAL_str_n;
+
     for(var i = 0; i < spor.length; ++i){
         if((""+num.n) == spor[i]){
-            $("#inner_statement").html("<p>There exists a simple group of order $" + num +  "=" + showFactorization(num) + "$.</p>");
+            $("#inner_statement").html("<p>There exists a simple group of order $" + num + (b ? "" : "=" + showFactorization(num)) + "$.</p>");
 
             num.proof = "<p>In fact, the sporadic group $" + spor_sym[i] + "$, (" + spor_name[i] + ") has order $" + num.n + "$.</p>";
             num.proofShown = true;
