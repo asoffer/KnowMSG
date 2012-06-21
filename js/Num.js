@@ -29,8 +29,9 @@ function Num(n){
     this.proof = "";
     this.proofShown = false;
 
-    //list of all the options that have worked. some may be unnecessary in a final proof. FIXME later. its fine for a first version.
     this.workedOptions = new List();
+    this.currentLayer = new List();
+    this.workedOptions.pushBack(this.currentLayer);
 }
 
 
@@ -144,7 +145,7 @@ Num.prototype = {
         if(TechInjectBound.apply(this, this.divInject) || TechInjectBound.apply(this, this.smartInject))
             return;
 
-       //knock off np's too small for a div injection. if we need to
+        //knock off np's too small for a div injection. if we need to
         //do smart injection too. there's a question about wehether
         //this is simpler than some of the other arguments, but it's
         //much easier to do this check once than have some wacky
@@ -179,6 +180,8 @@ Num.prototype = {
                 }
                 ptr = ptr.prev;
             }
+            this.currentLayer = new List();
+            this.workedOptions.pushBack(this.currentLayer);
 
         }
 
@@ -218,23 +221,37 @@ Num.prototype = {
                }
                */
 
-            if(this.workedOptions.size == 1){
-                this.proof += this.workedOptions.first().proof;
-            }
-            else{
-                var ptr = this.workedOptions.head.next;
-                while(ptr != this.workedOptions.head){
-                    //if it's from TechNC, then we win
-                    if(ptr.data.proof.substr(3,8) == "We first"){
-                        this.proof += ptr.data.proof;
-                        break;
-                    }
 
-                    this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+            var ptr = this.workedOptions.head.next;
+            //do all but the last one
+            while(ptr != this.workedOptions.head.prev){
+                //just dump everything
+                var ptr2 = ptr.data.head.next;
+                while(ptr2 != ptr.data.head){
+                    this.proof += "<h6>Case $n_{" + ptr2.data.p +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
 
-                    ptr = ptr.next;
+                    ptr2 = ptr2.next;
                 }
+
+                //FIXME now we know the following:
+                this.proof += "<p>Now we know the following shit!</p>";
+
+                ptr = ptr.next;
             }
+
+            ptr2 = ptr.data.head.prev;
+            while(ptr2 != ptr.data.head){
+                //FIXME this is a dump. be careful on display
+                if(this.workedOptions.size == 1 && ptr.data.size == 1){
+                    this.proof += ptr2.data.proof;
+                }
+                else{
+                    this.proof += "<h6>Case $n_{" + ptr2.data.p +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
+                }
+
+                ptr2 = ptr2.prev;
+            }
+
 
             $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 
@@ -249,49 +266,49 @@ Num.prototype = {
             this.proof += pf_basic(this, this.needSmart) + ptr.data.showProof();
             */
         }
-        else{
-            $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-            this.proof = "<p>While I cannot find an elementary proof, "
-                //try burnside
-                if(this.primes.size == 2)
-                    this.proof += "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+            else{
+                $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
+                this.proof = "<p>While I cannot find an elementary proof, "
+                    //try burnside
+                    if(this.primes.size == 2)
+                        this.proof += "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
 
-            //try feit-thompson
-                else if(this.n % 2 == 1)
-                    this.proof += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+                //try feit-thompson
+                    else if(this.n % 2 == 1)
+                        this.proof += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
 
-            //use the classification
-                else
-                    this.proof += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
+                //use the classification
+                    else
+                        this.proof += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
 
-            var emel = "asoffer";
-            this.proof += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
-            //var ptr = this.primes.head.next;
+                var emel = "asoffer";
+                this.proof += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
+                //var ptr = this.primes.head.next;
 
-            this.proof += pf_basic(this, this.divInject != this.smartInject);
+                this.proof += pf_basic(this, this.divInject != this.smartInject);
 
-            var str = "";
-            var ptr = this.workedOptions.head.next;
-            while(ptr != this.workedOptions.head){
-                this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+                var str = "";
+                var ptr = this.workedOptions.head.next;
+                while(ptr != this.workedOptions.head){
+                    this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
 
-                ptr = ptr.next;
+                    ptr = ptr.next;
+                }
+                /*
+                   while(ptr != this.primes.head){
+                   str += ptr.data.showProof();
+
+                   ptr = ptr.next;
+                   }
+                   if(str != ""){
+                //then add on the final results if anything was added on
+                this.proof += str;// + "FINISH ME";
+                }
+                */
             }
-            /*
-               while(ptr != this.primes.head){
-               str += ptr.data.showProof();
 
-               ptr = ptr.next;
-               }
-               if(str != ""){
-            //then add on the final results if anything was added on
-            this.proof += str;// + "FINISH ME";
-            }
-            */
-        }
-
-        this.proofShown = true;
-        return this.proof;
+            this.proofShown = true;
+            return this.proof;
     },
 
     computeInjections: function(){

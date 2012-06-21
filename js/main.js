@@ -1,7 +1,7 @@
 var GLOBAL_v = 1.4;
-var GLOBAL_d = "June 19, 2012";
+var GLOBAL_d = "June 20, 2012";
 var GLOBAL_n = null;
-var GLOBAL_fail = new Array(720,756,840,1008,1040,1080,1140);
+var GLOBAL_fail = new Array(756,840,1008,1040,1080,1140,1224);
 
 $(function(){
     //set the version number
