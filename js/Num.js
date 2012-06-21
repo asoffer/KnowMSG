@@ -162,9 +162,8 @@ Num.prototype = {
         }
 
         //ugly cases
-        if(Tech720.apply(this) || Tech840.apply(this))
+        if(Tech720.apply(this) || Tech840.apply(this) || Tech756.apply(this))
             return;
-
 
         var flag = true;
         while(flag && !this.proofComplete){
@@ -208,108 +207,111 @@ Num.prototype = {
         if(this.proofShown)
             return this.proof;
 
-
-        if(this.proofComplete){
-            this.proof += pf_basic(this, this.needSmart);
-
-            /*
-               var ptr = this.primes.head.next;
-               while(ptr != this.primes.head){
-               this.proof += ptr.data.showProof();
-
-               ptr = ptr.next;
-               }
-               */
-
-
-            var ptr = this.workedOptions.head.next;
-            //do all but the last one
-            while(ptr != this.workedOptions.head.prev){
-                //just dump everything
-                var ptr2 = ptr.data.head.next;
-                while(ptr2 != ptr.data.head){
-                    this.proof += "<h6>Case $n_{" + ptr2.data.p +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
-
-                    ptr2 = ptr2.next;
-                }
-
-                //FIXME now we know the following:
-                this.proof += "<p>Now we know the following shit!</p>";
-
-                ptr = ptr.next;
-            }
-
-            ptr2 = ptr.data.head.prev;
+        this.proof += pf_basic(this, this.needSmart);
+        var ptr = this.workedOptions.head.next;
+        //do all but the last one
+        while(ptr != this.workedOptions.head.prev){
+            //just dump everything
+            var ptr2 = ptr.data.head.next;
             while(ptr2 != ptr.data.head){
-                //FIXME this is a dump. be careful on display
-                if(this.workedOptions.size == 1 && ptr.data.size == 1){
-                    this.proof += ptr2.data.proof;
-                }
-                else{
-                    this.proof += "<h6>Case $n_{" + ptr2.data.p +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
-                }
+                this.proof += "<h6>Case $n_{" + ptr2.data.p +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
 
-                ptr2 = ptr2.prev;
+                ptr2 = ptr2.next;
             }
 
+            //FIXME now we know the following:
+            this.proof += "<p>Now we know the following shit!</p>";
 
-            $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-
-            /*
-            //if we actually have a proof
-            while(!ptr.data.proofComplete)
-            ptr = ptr.prev;
-
-            while(ptr.data.np.first().np < this.smartInject)
-            ptr.data.np.popFront();
-
-            this.proof += pf_basic(this, this.needSmart) + ptr.data.showProof();
-            */
+            ptr = ptr.next;
         }
-            else{
-                $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-                this.proof = "<p>While I cannot find an elementary proof, "
-                    //try burnside
-                    if(this.primes.size == 2)
-                        this.proof += "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
 
-                //try feit-thompson
-                    else if(this.n % 2 == 1)
-                        this.proof += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+        var theLastPrime = 0;
+        var ptr3 = this.primes.head.prev;
+        while(ptr3 != this.primes.head){
+            if(ptr3.data.proofComplete){
+                theLastPrime = ptr3.data.p;
+            }
+            ptr3 = ptr3.prev;
+        }
 
-                //use the classification
-                    else
-                        this.proof += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
+        var l = new List();
+        ptr2 = ptr.data.head.next;
+        while(ptr2 != ptr.data.head){
+            if(ptr2.data.p.p == theLastPrime)
+                l.pushBack(ptr2.data);
+            ptr2 = ptr2.next;
+        }
+        
+        if(l.size == 1)
+            this.proof += l.first().proof;
+        else{
+            ptr2 = l.head.next;
+            while(ptr2 != l.head){
+                console.log(ptr2.data);
+                this.proof += "<h6>Case $n_{" + theLastPrime +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
 
-                var emel = "asoffer";
-                this.proof += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
-                //var ptr = this.primes.head.next;
-
-                this.proof += pf_basic(this, this.divInject != this.smartInject);
-
-                var str = "";
-                var ptr = this.workedOptions.head.next;
-                while(ptr != this.workedOptions.head){
-                    this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-                    ptr = ptr.next;
-                }
-                /*
-                   while(ptr != this.primes.head){
-                   str += ptr.data.showProof();
-
-                   ptr = ptr.next;
-                   }
-                   if(str != ""){
-                //then add on the final results if anything was added on
-                this.proof += str;// + "FINISH ME";
-                }
-                */
+                ptr2 = ptr2.next;
             }
 
-            this.proofShown = true;
-            return this.proof;
-    },
+        }
+
+        $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
+
+        /*
+        //if we actually have a proof
+        while(!ptr.data.proofComplete)
+        ptr = ptr.prev;
+
+        while(ptr.data.np.first().np < this.smartInject)
+        ptr.data.np.popFront();
+
+        this.proof += pf_basic(this, this.needSmart) + ptr.data.showProof();
+        */
+        /*}
+          else{
+          $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
+          this.proof = "<p>While I cannot find an elementary proof, "
+        //try burnside
+        if(this.primes.size == 2)
+        this.proof += "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+
+        //try feit-thompson
+        else if(this.n % 2 == 1)
+        this.proof += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+
+        //use the classification
+        else
+        this.proof += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
+
+        var emel = "asoffer";
+        this.proof += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
+        //var ptr = this.primes.head.next;
+
+        this.proof += pf_basic(this, this.divInject != this.smartInject);
+
+        var str = "";
+        var ptr = this.workedOptions.head.next;
+        while(ptr != this.workedOptions.head){
+        this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
+
+        ptr = ptr.next;
+        }
+        /*
+        while(ptr != this.primes.head){
+        str += ptr.data.showProof();
+
+        ptr = ptr.next;
+        }
+        if(str != ""){
+        //then add on the final results if anything was added on
+        this.proof += str;// + "FINISH ME";
+        }
+
+        }*/
+
+        this.proofShown = true;
+        return this.proof;
+},
 
     computeInjections: function(){
         var m = 0;
