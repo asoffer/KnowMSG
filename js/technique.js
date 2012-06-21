@@ -471,12 +471,24 @@ Tech720.proof = function(n){
     var theRest = "<p>We know $\\left|N_G(S)\\right|=16$, and therefore contains an element $e$ not in $S$ which contains a $2$-cycle containing $1$. Without loss of generality, let that $2$-cycle be $(1,2)$. The element $e$ must also normalize a $4$-element subgroup of $S$. This subgroup could be $\\langle c\\rangle$, $\\langle d\\rangle$, or $\\langle cd\\rangle$. The cases are nearly identical, so we will only show the case $\\langle c\\rangle$. We may multiply $e$ by an appropriate element of $S$ to get $e'$ which fixes the point $3$. Since $e'$ fixes at most two points, it must invert $\\langle c\\rangle$ and therefore contain the cycle $(5,8)$. This leaves two possibilities for $e'$:</p><ul><li><p>$e'=(1,2)(5,8)(6,9)(7,10)$</p></li><li><p>$e'=(1,2)(5,8)(6,7)(9,10)$</p></li></ul><p>The first of these two options is implossible, because $b\\cdot e'$ fixes $3$ points (namely $8$, $9$, and $10$). Thus, $$e'=(1,2)(5,8)(6,7)(9,10),$$ and it is clear that $G=\\langle a,b,c,d,e'\\rangle$. In fact, this group must be the Mathieu group $M_{10}$ which is known to not be simple (though we don't need this fact). We can check that $\\langle a,b,c,e'\\rangle$ is a subgroup of $G$ of order $360$. As subgroups of index $2$ are always normal, $G$ cannot be simple.</p>";
     return disclaimer + intro + n3eq16 + n3eq40 + options + n3eq10 + theRest;
 }
-Tech840 = new Technique("720", true);
+Tech840 = new Technique("840", true);
 Tech840.test = function(n){ return n.n == 840; };
 Tech840.proof = function(n){
     n.computeFactorList();
-    var disclaimer = "<div class=\"ui-state-highlight ui-corner-all\" style=\"margin-top: 0px; margin-bottom: 20px; padding: 1em .7em; font-size: 10pt;\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span><strong>Disclaimer:</strong> This proof is not my own work. It follows closely the proof by Guillermo Mantilla, found <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">here</a></div>
- 
-    return disclaimer
+    var disclaimer = "<div class=\"ui-state-highlight ui-corner-all\" style=\"margin-top: 0px; margin-bottom: 20px; padding: 1em .7em; font-size: 10pt;\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span><strong>Disclaimer:</strong> This proof is not my own work. It follows closely the proof by Guillermo Mantilla, found <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">here</a>.</div>";
+    var intro = pf_basic(n, false) + "<p>For each prime $p$, let $\\mbox{Syl}_p(G)$ denote the set of " + sylow("p") + "s of $G$. This is to say that $n_p=\\left|\\mbox{Syl}_p(G)\\right|$.</p>";
+
+    var opt = new Option({n: 840}, 8);
+    opt.other = 42;
+    opt.norm = 105;
+    var p = 7;
+    opt.ptr = {data: {p: 7}};
+    var n7eq8 = "<h6>Case $n_7=8$:</h6>" + TechSymDiv.proof(n, p, opt);
+
+    var n7eq15 = "<h6>Case $n_7=15$:</h6><p>If $n_7=15$, then for a " + sylow(7) + " $P$, $\\left|N_G(P)\\right|=56$. Since $N_G(P)/C_G(P)$ is isomorphic to a subgroup of $\\mbox{Aut}(P)\\cong\\mathbb Z/6\\mathbb Z$ by the isomorphism $$g\\cdot C_G(P)\\mapsto (x\\mapsto g^{-1}xg),$$ we deduce that $C_G(P)$ is divisible by $28$. In particular, there is an element $x$ of order $2$ which centralizes $P$, and an element $y$ which generates $P$ which commute. Their product, $xy$, has order $14$. Note that $xy$ cannot normalize any other " + sylow(7) + " $Q$, because if it did, then $(xy)^2=y^2$ would normalize $Q$, but $y^2$ generates $P$, and no element of $P$ normalizes any other " + sylow(7) + ". Thus, if we identify $xy$ with its action on the " + sylow(7) + "s of $G$, we see that $xy$ must be an element of order $14$ in $A_{15}$ which fixes precisely one point (namely, $P$). We can see that this is not possible by considering its cycle structure.</p>";
+    var n7eq120 = "<h6>Case $n_7=120$:</h6><p>We can account for $120\\cdot (7-1)=720$ elements of order $7$. We may also account for, a minimum of $21\\cdot(5-1)=84$ elements of order $5$, and $10\\cdot(3-1)=20$ elements of order $3$. Altogether, this constitutes $$720+84+20=824\\mbox{ elements,}$$ leaving room for only $16$ more. However, the union of $7$ " + sylow(2) + "s constitutes at least $7\\cdot 8-6\\cdot 4=32$ new elements, a contradiction.</p>";
+
+
+    return disclaimer + intro + n7eq8 + n7eq15 + n7eq120;
 }
- 
+

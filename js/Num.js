@@ -162,7 +162,7 @@ Num.prototype = {
         }
 
         //ugly cases
-        if(Tech720.apply(this))
+        if(Tech720.apply(this) || Tech840.apply(this))
             return;
 
 

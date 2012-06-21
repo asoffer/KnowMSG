@@ -1,7 +1,7 @@
 var GLOBAL_v = 1.4;
 var GLOBAL_d = "June 20, 2012";
 var GLOBAL_n = null;
-var GLOBAL_fail = new Array(756,840,1008,1040,1080,1140,1224);
+var GLOBAL_fail = new Array(1008,1040,1080,1140,1224,1232);
 
 $(function(){
     //set the version number
@@ -146,7 +146,7 @@ function sendMessage(title, message){
 
 function generateFailList(){
     var s = "Smallest inadequate proofs: $\\left|G\\right|=$";
-    for(var i = 0; i < 6; ++i)
+    for(var i = 0; i < 5; ++i)
         s += "<span style = \"cursor:pointer;\" onClick=\"solve(" + GLOBAL_fail[i] + ")\">$" + GLOBAL_fail[i] + "$</span>$,$";
     s += "<span style = \"cursor:pointer;\" onClick=\"solve(" + GLOBAL_fail[i] + ")\">$" + GLOBAL_fail[i] + "$</span>$\\dots$";
 
