@@ -219,9 +219,6 @@ Num.prototype = {
                 ptr2 = ptr2.next;
             }
 
-            //FIXME now we know the following:
-            this.proof += "<p>Now we know the following shit!</p>";
-
             ptr = ptr.next;
         }
 
@@ -241,7 +238,7 @@ Num.prototype = {
                 l.pushBack(ptr2.data);
             ptr2 = ptr2.next;
         }
-        
+
         if(l.size == 1)
             this.proof += l.first().proof;
         else{
@@ -257,59 +254,30 @@ Num.prototype = {
 
         $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
 
-        /*
-        //if we actually have a proof
-        while(!ptr.data.proofComplete)
-        ptr = ptr.prev;
+        this.proofShown = true;
 
-        while(ptr.data.np.first().np < this.smartInject)
-        ptr.data.np.popFront();
+        if(this.proofComplete)
+            return this.proof;
 
-        this.proof += pf_basic(this, this.needSmart) + ptr.data.showProof();
-        */
-        /*}
-          else{
-          $("#inner_statement").html("<p>There are no simple groups of order $" + this.n + "=" + showFactorization(this) + "$.</p>");
-          this.proof = "<p>While I cannot find an elementary proof, "
-        //try burnside
-        if(this.primes.size == 2)
-        this.proof += "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+        var pf = "<p>While I cannot find an elementary proof, "
+            //try burnside
+            if(this.primes.size == 2)
+                pf = "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple." + this.proof;
 
         //try feit-thompson
-        else if(this.n % 2 == 1)
-        this.proof += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+            else if(this.n % 2 == 1)
+                pf += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
 
         //use the classification
-        else
-        this.proof += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
+            else
+                pf += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
 
         var emel = "asoffer";
-        this.proof += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
+        pf += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
         //var ptr = this.primes.head.next;
 
-        this.proof += pf_basic(this, this.divInject != this.smartInject);
+        this.proof = pf + this.proof;
 
-        var str = "";
-        var ptr = this.workedOptions.head.next;
-        while(ptr != this.workedOptions.head){
-        this.proof += "<h6>Case $n_{" + ptr.data.p + "}=" + ptr.data.np + "$:</h6>" + ptr.data.proof;
-
-        ptr = ptr.next;
-        }
-        /*
-        while(ptr != this.primes.head){
-        str += ptr.data.showProof();
-
-        ptr = ptr.next;
-        }
-        if(str != ""){
-        //then add on the final results if anything was added on
-        this.proof += str;// + "FINISH ME";
-        }
-
-        }*/
-
-        this.proofShown = true;
         return this.proof;
 },
 
