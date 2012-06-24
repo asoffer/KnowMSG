@@ -244,7 +244,10 @@ Num.prototype = {
         else{
             ptr2 = l.head.next;
             while(ptr2 != l.head){
-                console.log(ptr2.data);
+                if(ptr2.data.proof.substr(3,8) == "We first"){
+                    this.proof += ptr2.data.proof;
+                    break;
+                }
                 this.proof += "<h6>Case $n_{" + theLastPrime +"}=" + ptr2.data.np + "$:</h6>" + ptr2.data.proof;
 
                 ptr2 = ptr2.next;
@@ -259,27 +262,27 @@ Num.prototype = {
         if(this.proofComplete)
             return this.proof;
 
-        var pf = "<p>While I cannot find an elementary proof, "
+        var pf = "<div class=\"ui-state-highlight ui-corner-all\" style=\"margin-top: 0px; margin-bottom: 20px; padding: 1em .7em; font-size: 10pt;\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span><strong>Attention:</strong><br><br>While I cannot find an elementary proof, "
             //try burnside
             if(this.primes.size == 2)
-                pf = "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple." + this.proof;
+                pf += "Burnside's Theorem tells us that for primes $p$ and $q$, and natural numbers $a$ and $b$, groups of order $p^a\\cdot q^b$ are solvable. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple."
 
-        //try feit-thompson
+                    //try feit-thompson
             else if(this.n % 2 == 1)
-                pf += "the Feit-Thompson Theorem says that all groups of odd order are solvable. The only solvable groups which are simple are the cyclic groups of prime order. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
+                pf += "the Feit-Thompson Theorem states that all groups of odd order are solvable. Since $" + this.n + "$ is not prime, no group of order $" + this.n + "$ can be simple.";
 
         //use the classification
             else
                 pf += "the classification theorem for finite simple groups tells us the possible sizes of finite simple groups, to which $" + this.n + "$ does not belong.";
 
         var emel = "asoffer";
-        pf += " Below is all of the information which I could figure out in a proof-like format. Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</p><hr>";
+        pf += " Below is what I think the beginning of a proof would look like.<br><br>Do you know an elementary technique that would solve this case? <a href = \"mailto:" + emel + "@math.ucla.edu\">Let me know</a>!</div>";
         //var ptr = this.primes.head.next;
 
         this.proof = pf + this.proof;
 
         return this.proof;
-},
+    },
 
     computeInjections: function(){
         var m = 0;

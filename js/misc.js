@@ -150,7 +150,7 @@ function modInverse(a,m){
     if(v.g != 1)
         return false;
     else
-        return a % m;
+        return (m + v.y) % m;
 }
 
 //look for an element of order o in A_a
@@ -158,8 +158,8 @@ function modInverse(a,m){
 function findElementInAlt(o,a){
     var x = new Num(o);
     x.factor();
-    var p1 = x.primes.first().p
-        var p2 = x.primes.last().p;
+    var p1 = x.primes.first().p;
+    var p2 = x.primes.last().p;
 
     //make it even
     if(p1 == 2)

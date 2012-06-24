@@ -1,5 +1,5 @@
 var GLOBAL_v = 1.4;
-var GLOBAL_d = "June 20, 2012";
+var GLOBAL_d = "June 23, 2012";
 var GLOBAL_n = null;
 var GLOBAL_fail = new Array(1008,1040,1080,1140,1224,1232);
 
@@ -16,64 +16,65 @@ $(function(){
     $("#about")
     .button({icons: {primary: "ui-icon-info"}})
     .click(function(){
-        sendMessage("About NoMSG", "<h4>What is NoMSG?</h4><p>NoMSG is a proof generator. If you input a positive integer $n$, NoMSG will attempt to find a simple group of order $n$, or generate a proof that no such simple groups exist.</p><h4>How does it work?</h4><p>Magic.</p><h4>Where did the information come from?</h4><p>Most of the information to construct these proofs can be found on <a href=\"http://en.wikipedia.org/wiki/Sylow_theorems#Fusion_results\">Wikipedia</a>, or any introductory group theory text. For some of the more involved proofs, I adapted proofs from these sources:</p><ul><li>Guillermo Mantilla's <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">notes</a> on group theory.</li><li>Posts from the blog <a href =\"http://crazyproject.wordpress.com/tag/simple-group/\">Project Crazy Project</a>.</li><li><a href = \"http://en.wikipedia.org/wiki/List_of_finite_simple_groups\">This list</a> from Wikipedia.</li></ul>");
+        sendMessage("About NoMSG", "<h4>What is NoMSG?</h4><p>NoMSG is a proof generator. If you input a positive integer $n$, NoMSG will attempt to find a simple group of order $n$, or generate a proof that no such simple groups exist.</p><h4>How does it work?</h4><p>Magic. But if you want to know more, read about it <a href = \"\">here</a>.</p><h4>Where did the information come from?</h4><p>Most of the information to construct these proofs can be found on <a href=\"http://en.wikipedia.org/wiki/Sylow_theorems#Fusion_results\">Wikipedia</a>, or any introductory group theory text. For some of the more involved proofs, I adapted proofs from these sources:</p><ul><li>Guillermo Mantilla's <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">notes</a> on group theory.</li><li>Posts from the blog <a href =\"http://crazyproject.wordpress.com/tag/simple-group/\">Project Crazy Project</a>.</li><li><a href = \"http://en.wikipedia.org/wiki/List_of_finite_simple_groups\">This list</a> from Wikipedia.</li></ul>");
     });
 
 //------------------------------
 
-    $("#number_in").keyup(function(e){
-        if(e.keyCode == 13)
-        $("#go").click();
-    });
+$("#number_in").keyup(function(e){
+    if(e.keyCode == 13)
+    $("#go").click();
+});
 
     $("#go")
-        .button()
-        .click(function() {
-            var v = $("#number_in").val();
-            for(var i = 0; i < v.length; ++i){
-                var x = v[i].charCodeAt(0);
-                if(x < 40 || x == 44 || x > 57){
-                    $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>I don't think \"" + v + "\" is a number." + (x == 94? "This might be because I can't do exponentiation, and you used \"^.\" Sorry to disappoint.":" Please try again, with something slightly more \"numbery.\"") + "</div></div>");
-                    return;
-                }
-            }
-
-            try{
-                var x = eval(v);
-
-            }
-            catch(e){
-                $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was invalid. I'm not exactly sure why, but you probably messed something up. Try again without messing up this time.</div></div>");
+.button()
+    .click(function() {
+        var v = $("#number_in").val();
+        for(var i = 0; i < v.length; ++i){
+            var x = v[i].charCodeAt(0);
+            if(x < 40 || x == 44 || x > 57){
+                $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>I don't think \"" + v + "\" is a number." + (x == 94? "This might be because I can't do exponentiation, and you used \"^.\" Sorry to disappoint.":" Please try again, with something slightly more \"numbery.\"") + "</div></div>");
                 return;
             }
+        }
 
-            var y = Math.floor(x);
+        try{
+            var x = eval(v);
 
-            if(y != x || x < 1){
-                $("#inner_statement").html("<p>There are no (simple) groups of order $" + x + "$.</p>");
+        }
+        catch(e){
+            $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was invalid. I'm not exactly sure why, but you probably messed something up. Try again without messing up this time.</div></div>");
+            return;
+        }
 
-                $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was not a positive integer. Please try again, with a number that has a more \"positive integer\" vibe to it.</div></div>");
+        var y = Math.floor(x);
 
-                MathJax.Hub.Typeset();
+        if(y != x || x < 1){
+            $("#inner_statement").html("<p>There are no (simple) groups of order $" + x + "$.</p>");
 
-                return;
-            }
+            $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was not a positive integer. Please try again, with a number that has a more \"positive integer\" vibe to it.</div></div>");
 
-            solve(x);
-            setListExpandDisplay();
-        });
+            MathJax.Hub.Typeset();
 
-    /*
-       var x = 1;
-       var counter = new List();
-       while(x <= 10000){
-       x+=1;
-       GLOBAL_n = new Num(x);
-       GLOBAL_n.prove();
-       if(!GLOBAL_n.proofComplete){
-//console.log(GLOBAL_n.n);
-counter.pushBack(GLOBAL_n.n);
-}
+            return;
+        }
+
+        solve(x);
+        setListExpandDisplay();
+    });
+
+/*
+//for testing
+var x = 800000;
+var counter = new List();
+while(x <= 800000){
+    x+=1;
+    GLOBAL_n = new Num(x);
+    GLOBAL_n.prove();
+    if(!GLOBAL_n.proofComplete){
+        //console.log(GLOBAL_n.n);
+        counter.pushBack(GLOBAL_n.n);
+    }
 }
 
 console.log("" + counter);
@@ -104,8 +105,6 @@ function setListExpandDisplay(){
         break;
     ptr = ptr.next;
         }
-
-        console.log(p);
 
         if(x == "n")
         $(this).html("$$" + inOrIs("n_{" + ptr.data.p + "}", ptr.data.np, (b == 0)).s + "$$");

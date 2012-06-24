@@ -98,6 +98,16 @@ h6{
     min-height: 30px;
 }
 
+#intro p{
+    font: 12pt "Trebuchet MS" sans-serif;
+}
+
+#intro a{
+    text-decoration: none;
+}
+#intro a:hover{
+    text-decoration: underline;
+}
 
 #statement p{
     padding: 8px 4px;
