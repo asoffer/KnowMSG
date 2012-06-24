@@ -1354,6 +1354,160 @@ function sylowList(n){
     return pf;
 }
 
+var GLOBAL_v = 1.4;
+var GLOBAL_d = "June 23, 2012";
+var GLOBAL_n = null;
+var GLOBAL_fail = new Array(1008,1040,1080,1140,1224,1232);
+
+$(function(){
+    //set the version number
+    $("#version").html("<span id = \"vers\">Version " + GLOBAL_v + "</span><br>Last updated "+GLOBAL_d);
+    $("#vers").click(function(){
+        sendMessage("Changes","<h4>What's new in Version " + GLOBAL_v + "?</h4><ul><li>All orders solved below $1000$.</li><li>Older techniques strengthened.</li><li>Some display issues fixed.</li></ul><h4>What's new in Version 1.3?</h4><ul><li>Groups sizes $540, 630, 810, 990, 1890$ and more solved.</li><li>Several bugs fixed.</li></ul><h4>What's new in Version 1.2?</h4><ul><li>Display issues with long lists fixed.</li><li>Potentially long lines only displayed at users choice.</li><li>Added capability to input arithmetic expressions.</li></ul>");
+    });
+
+    generateFailList();
+
+    //set the information about NoMSG
+    $("#about")
+    .button({icons: {primary: "ui-icon-info"}})
+    .click(function(){
+        sendMessage("About NoMSG", "<h4>What is NoMSG?</h4><p>NoMSG is a proof generator. If you input a positive integer $n$, NoMSG will attempt to find a simple group of order $n$, or generate a proof that no such simple groups exist.</p><h4>How does it work?</h4><p>Magic. But if you want to know more, read about it <a href = \"http://soffer801.wordpress.com/2012/06/23/nomsg-v1-4/\">here</a>.</p><h4>Where did the information come from?</h4><p>Most of the information to construct these proofs can be found on <a href=\"http://en.wikipedia.org/wiki/Sylow_theorems#Fusion_results\">Wikipedia</a>, or any introductory group theory text. For some of the more involved proofs, I adapted proofs from these sources:</p><ul><li>Guillermo Mantilla's <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">notes</a> on group theory.</li><li>Posts from the blog <a href =\"http://crazyproject.wordpress.com/tag/simple-group/\">Project Crazy Project</a>.</li><li><a href = \"http://en.wikipedia.org/wiki/List_of_finite_simple_groups\">This list</a> from Wikipedia.</li></ul><p>and puns on the <a href = \"\">splash page</a> from this friend:</p><ul><li><a href = \"http://www.math.ucla.edu/~jedyang/\">Jed Yang</a></li></ul>");
+    });
+
+//------------------------------
+
+$("#number_in").keyup(function(e){
+    if(e.keyCode == 13)
+    $("#go").click();
+});
+
+    $("#go")
+.button()
+    .click(function() {
+        var v = $("#number_in").val();
+        for(var i = 0; i < v.length; ++i){
+            var x = v[i].charCodeAt(0);
+            if(x < 40 || x == 44 || x > 57){
+                $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>I don't think \"" + v + "\" is a number." + (x == 94? "This might be because I can't do exponentiation, and you used \"^.\" Sorry to disappoint.":" Please try again, with something slightly more \"numbery.\"") + "</div></div>");
+                return;
+            }
+        }
+
+        try{
+            var x = eval(v);
+
+        }
+        catch(e){
+            $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was invalid. I'm not exactly sure why, but you probably messed something up. Try again without messing up this time.</div></div>");
+            return;
+        }
+
+        var y = Math.floor(x);
+
+        if(y != x || x < 1){
+            $("#inner_statement").html("<p>There are no (simple) groups of order $" + x + "$.</p>");
+
+            $("#proof").html("<div class=\"ui-widget\"><div class=\"ui-state-error ui-corner-all\"><span class=\"ui-icon ui-icon-alert\" style=\"float: left; margin-right: .3em;\"></span><strong>Error: </strong>Your input was not a positive integer. Please try again, with a number that has a more \"positive integer\" vibe to it.</div></div>");
+
+            MathJax.Hub.Typeset();
+
+            return;
+        }
+
+        solve(x);
+        setListExpandDisplay();
+    });
+
+/*
+//for testing
+var x = 800000;
+var counter = new List();
+while(x <= 800000){
+    x+=1;
+    GLOBAL_n = new Num(x);
+    GLOBAL_n.prove();
+    if(!GLOBAL_n.proofComplete){
+        //console.log(GLOBAL_n.n);
+        counter.pushBack(GLOBAL_n.n);
+    }
+}
+
+console.log("" + counter);
+*/
+});
+
+function solve(x){
+    GLOBAL_str_n = $("#number_in").val();
+    GLOBAL_n = new Num(x);
+
+    GLOBAL_n.prove();
+    $("#proof").html(GLOBAL_n.showProof());
+
+    MathJax.Hub.Typeset();
+}
+
+function setListExpandDisplay(){
+    //set expanding ability
+    $("span.list").click(function(){
+        var b = parseInt(this.id.split(":")[0]);
+        var x = this.id.split(":")[1].split("_")[0];
+        var p = parseInt(this.id.split("_")[1]);
+
+        //find the right prime
+        var ptr = GLOBAL_n.primes.head.next;
+        while(ptr != GLOBAL_n.primes.head){
+            if(ptr.data.p == p)
+        break;
+    ptr = ptr.next;
+        }
+
+        if(x == "n")
+        $(this).html("$$" + inOrIs("n_{" + ptr.data.p + "}", ptr.data.np, (b == 0)).s + "$$");
+
+        else if(x == "f"){
+            var ind = new Num(p);
+            ind.computeFactorList();
+            var s = toEnglishCentered(ind.factors, (b == 0));
+            $(this).html(s.split(">")[1].split("<")[0]);
+        }
+
+        this.id = "" + (1 - b) + ":"+this.id.split(":")[1];
+        MathJax.Hub.Typeset();
+    });
+}
+
+function setDialog(title){
+    $("#message").dialog({
+        width: 400,
+    resizable: false,
+    autoOpen: false,
+    modal: true,
+    open: function(){
+        $('.ui-widget-overlay').hide().fadeIn();
+    },
+    hide: "fade",
+    title: title
+    });
+
+}
+
+function sendMessage(title, message){
+    $("#message").html(message);
+    setDialog(title);
+    $("#message").dialog("open");
+    MathJax.Hub.Typeset();
+}
+
+function generateFailList(){
+    var s = "Smallest inadequate proofs: $\\left|G\\right|=$";
+    for(var i = 0; i < 5; ++i)
+        s += "<span style = \"cursor:pointer;\" onClick=\"solve(" + GLOBAL_fail[i] + ")\">$" + GLOBAL_fail[i] + "$</span>$,$";
+    s += "<span style = \"cursor:pointer;\" onClick=\"solve(" + GLOBAL_fail[i] + ")\">$" + GLOBAL_fail[i] + "$</span>$\\dots$";
+
+    $("table td").first().html(s);
+}
+
 //DISPLAY CODES:
 //0 there are no simple groups of order n
 //1 there is a simple group of order n
@@ -1850,12 +2004,13 @@ Tech756.test = function(n){ return n.n == 756; };
 Tech756.proof = function(n){
     n.computeFactorList();
     var disclaimer = "<div class=\"ui-state-highlight ui-corner-all\" style=\"margin-top: 0px; margin-bottom: 20px; padding: 1em .7em; font-size: 10pt;\"><span class=\"ui-icon ui-icon-info\" style=\"float: left; margin-right: .3em;\"></span><strong>Disclaimer:</strong> This proof is not my own work. It follows closely the proof by Guillermo Mantilla, found <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">here</a>.</div>";
-    var intro = pf_basic(n, false) + "<p>For each prime $p$, let $\\mbox{Syl}_p(G)$ denote the set of " + sylow("p") + "s of $G$. This is to say that $n_p=\\left|\\mbox{Syl}_p(G)\\right|$.</p>";
+    var intro = pf_basic(n, false);
 
-    var rest= "<p>Let $P$ and $Q$ be distinct " + sylow(3) + "s of $G$, and let $H=P\\cap Q$. Note that if $\\left|H\\right|=9$, then $H$ is normal in both $P$ and $Q$, and we can bound the size of $N_G(H)$ by $$\\left|N_G(H)\\right|\\ge\\left|P\\cdot Q\\right|=\\frac{\\left|P\\right|\\cdot\\left|Q\\right|}{\\left|H\\right|}=81.$$ This means that $[G:N_G(H)]$ is no more than $7$. Now if we let $G$ act on the left cosets of $N_G(H)$ by left multiplication, the action induces a non-trivial (injective) map from $G$ into $S_7$ which we know cannot exist.</p><p>If $\\left|H\\right|=1$ for all pairs of " + sylow(3) + "s $P$ and $Q$, then we have $28\\cdot(27-1)=728$ non-trivial elements in " + sylow(3) + "s, and $36\\cdot(7-1)=216$ elements in " + sylow(7) + "s, which is plainly a contradiction.</p><p>We may therefore assume that there exist " + sylow(3) + "s $P$ and $Q$ with intersection $H$ of order $3$. Then we can find subgroups $P'$ and $Q'$ such that $H&lt;P'&lt;P$ and $H&lt;Q'&lt;Q$. Clearly $H$ is normal in both $P'$ and $Q'$, so we can bound the size of $N$ by $$\\left|N\\right|\\ge\\left|P'\\cdot Q'\\right|=\\frac{\\left|P'\\right|\\cdot\\left|Q'\\right|}{\\left|H\\right|}=27.$$ Of course, $N$ is not a group of order $27$, because then $N$ would be a " + sylow(3) + " whose intersection with $P$ would be $P'$, a subgroup of order $9$, which we already know is impossible. Thus, the smallest divisor of $756$ larger than $27$ and divisible by $\\left|P'\\right|=9$ is $36$, so $\\left|N\\right|\\ge36$. Moreover, any larger divisor satisfying these conditions would force $N$ to have index less than $9$ in $G$, which we know cannot happen, so $N$ is a subgroup of order $36$.</p><p>Let $R$ be a " + sylow(3) + " of $N$, and consider $N_G(R)$. Certainly $R$ is normal in a " + sylow(3) + " $P_0$ of $G$ containing $R$. If $R$ were normal in $N$, then $N_G(R)$ would necessarily have order at least $$\\left|N_G(R)\\right|\\ge \\frac{\\left|P_0\\right|\\left|N\\right|}{\\left|P_0\\cap N\\right|} = 108,$$ and be a subgroup of index $7$, yielding a contradiction. Thus, $R$ is not normal in $N$, and so $N$ must have more than one " + sylow(3) + ". Since the number of such subgroups must be $1$ modulo $3$ and a divisor of $36$, we know there are exactly $4$ " + sylow(3) + "s of $N$.</p><p>FIXME Thus, $Z(N)$ is a $3$-group, FIXME, so there is exactly one " + sylow(2) + "of $N$. So if $S$ is a " + sylow(2) + " of $N$ (and also of $G$), we have $N_G(S)$ has order at least $36$, since $N\\le N_G(S)$, and, for similar reasons to before, must have order exactly $36$. In other words, $N=N_G(S)$. It follows that $n_2=756/36=21$.</p>";
-    var rest2 = "<p>Let $X=\\{N_1,\\dots, N_{21}\\}$ denote the set of normalizers of the $21$ "+ sylow(2) + "s of $G$, and let $H_i=Z(N_i)$. Then $N_i$ centralizes $H_i$, so $N_i\\le C_G(H_i)$. As before, $H_i$ is order $3$. We have also seen that, any subgroup of order $36$ must be maximal, so $N_i=C_G(H_i)=N_G(H_i)$. In particular, if $i\\ne j$, then $H_i\\ne H_j$, lest $N_i=N_G(H_i)=N_G(H_j)=N_j$. Thus, the set $\\{H_1,\\dots,H_{21}\\}$ is the set of $3$-groups which are intersections of " + sylow(3) + "s. Now each $H_i$ is a central $3$-group in $N_i$, and so contained each of the four " + sylow(3) + "s of $N_i$, which have order $9$. A subgroup of order $9$ is contained in a unique " + sylow(3) + " in $G$, so $H_i$ is contained in at least four " + sylow(3) + "s of $G$. Conversely, if $K$ were a " + sylow(3) + " of $G$, Then $K$ would contain a subgroup $K'$ of index $3$ (order $9$). This would force $H_i\\lhd K'$, so $K'\\le N_G(H_i)=N_i$, making $K'$ one of the " + sylow(3) + "s of $N_i$. It follows that for each $i$, $H_i$ is contained in exactly four " + sylow(3) + "s of $G$.</p><p>Let $P_1,\\dots P_{28}$ be the $28$ " + sylow(3) + "s of $G$, and let $\\hat P_i$ denote $P_i\\setminus\\{1\\}$. The claim that each $H_i$ is contained in exactly four " + sylow(3) + "s can be stated as $$\\bigcap\\hat P_i=\\varnothing,$$ for any intersection of at least $5$ such sets. Further, there are exactly $21$ subsets of $4$ elements, one for each $H_i$, such that $\\bigcap\\hat P_i$ is non-empty (where the intersection is over four such sets). Let $\\{i_1,\\dots,i_4\\}$ be indices of the $\\hat P_i$ for such an intersection. Then $\\hat P_{i_1}\\cap\\dots\\cap\\hat P_{i_4}=H_i\\setminus\\{1\\}$. In particular, $$\\displaystyle\\sum_{\\left|I\\right|=4}\\left|\\bigcap_{i\\in I}\\hat P_i\\right|=21\\cdot(3-1)=42.$$</p><p>However, we also know that the intersection of two " + sylow(3) + "s of $G$ has size $1$ or $3$ (and therefore the same for three). Thus, $$\\displaystyle\\sum_{\\left|I\\right|=k}\\left|\\bigcap_{i\\in I}\\hat P_i\\right|=\\binom{4}{k}\\cdot21\\cdot(3-1)=\\binom4k\\cdot42,$$ for $i>1$. We may now apply the inclusion-exclusion principle to see that $$\\left|\\bigcup P_i\\right|=1+\\left|\\bigcup\\hat P_i\\right|=1+28\\cdot (27-1)-\\binom42\\cdot 42+\\binom43\\cdot42-42=603.$$ This means there are $603$ elements of in " + sylow(3) + "s in $G$, leaving room for $103$ more elements, which is not enough for the $216=36\\cdot(7-1)$ non-identity elements in " + sylow(7) + "s. Contradiction.</p>";
+    var rest= "<p>Let $P$ and $Q$ be distinct " + sylow(3) + "s of $G$, and let $H=P\\cap Q$. Note that if $\\left|H\\right|=9$, then $H$ is normal in both $P$ and $Q$, and we can bound the size of $N_G(H)$ by $$\\left|N_G(H)\\right|\\ge\\left|P\\cdot Q\\right|=\\frac{\\left|P\\right|\\cdot\\left|Q\\right|}{\\left|H\\right|}=81.$$ This means that $[G:N_G(H)]$ is no more than $7$. Now if we let $G$ act on the left cosets of $N_G(H)$ by left multiplication, the action induces a non-trivial (injective) map from $G$ into $S_7$ which we know cannot exist.</p><p>If $\\left|H\\right|=1$ for all pairs of " + sylow(3) + "s $P$ and $Q$, then we have $28\\cdot(27-1)=728$ non-trivial elements in " + sylow(3) + "s, and $36\\cdot(7-1)=216$ elements in " + sylow(7) + "s, which is plainly a contradiction.</p><p>We may therefore assume that there exist " + sylow(3) + "s $P$ and $Q$ with intersection $H$ of order $3$. Then we can find subgroups $P'$ and $Q'$ such that $H&lt;P'&lt;P$ and $H&lt;Q'&lt;Q$. Clearly $H$ is normal in both $P'$ and $Q'$, so we can bound the size of $N$ by $$\\left|N\\right|\\ge\\left|P'\\cdot Q'\\right|=\\frac{\\left|P'\\right|\\cdot\\left|Q'\\right|}{\\left|H\\right|}=27.$$ Of course, $N$ is not a group of order $27$, because then $N$ would be a " + sylow(3) + " whose intersection with $P$ would be $P'$, a subgroup of order $9$, which we already know is impossible. Thus, the smallest divisor of $756$ larger than $27$ and divisible by $\\left|P'\\right|=9$ is $36$, so $\\left|N\\right|\\ge36$. Moreover, any larger divisor satisfying these conditions would force $N$ to have index less than $9$ in $G$, which we know cannot happen, so $N$ is a subgroup of order $36$.</p><p>Let $R$ be a " + sylow(3) + " of $N$, and consider $N_G(R)$. Certainly $R$ is normal in a " + sylow(3) + " $P_0$ of $G$ containing $R$. If $R$ were normal in $N$, then $N_G(R)$ would necessarily have order at least $$\\left|N_G(R)\\right|\\ge \\frac{\\left|P_0\\right|\\left|N\\right|}{\\left|P_0\\cap N\\right|} = 108,$$ and be a subgroup of index $7$, yielding a contradiction. Thus, $R$ is not normal in $N$, and so $N$ must have more than one " + sylow(3) + ". Since the number of such subgroups must be $1$ modulo $3$ and a divisor of $36$, we know there are exactly $4$ " + sylow(3) + "s of $N$.</p>";
+    var rest2 = "<p>We now argue that $Z(N)$ is a $3$-group. Since $N$ has four " + sylow(3) + "s, there is a subgroup $N_0$ of order $3$ which is normal in $N$. Since $N/C_N(N_0)$ is isomorphic to a subgroup of $\\mbox{Aut}(N_0)\\cong\\mathbb Z/2\\mathbb Z$ by the isomorphism $$g\\cdot C_N(N_0)\\mapsto (x\\mapsto g^{-1}xg),$$ we deduce that $C_N(N_0)$ has index at most two in $N$. Recall that in any group of order 18, there is a unique " + sylow(3) + ", which is necessarily characteristic. Then, if $C_N(N_0)$ has index $2$ (order $18$), every " + sylow(3) + " of $C_N(N_0)$ would be normal in $N$, contradicting the fact that there is more than one " + sylow(3) + " in $N$. Thus, $H$ is central in $N$. This tells us that $Z(N)$ has order divisible by $3$, but not by $9$, lest there be a single " + sylow(3) + " in $N$. This means $Z(N)$ has order $3$, $6$, or $12$. Having order $12$ is not possible, because then, $N/Z(N)$ would be cyclic, implying that $N$ was abelian, which it cannot be. If $Z(N)$ were order $6$, it would have to be $\\mathbb Z/6\\mathbb Z$, and so it would have an index two subgroup which was normal in $N$. However, this contradicts the fact that $N$ can have no subgroups of index $2$. Thus, the only possibility is that $Z(N)$ has order $3$.</p><p>We then know that $Z(N)$ is contained in some " + sylow(3) + " of $N$, and hence, by conjugating, all " + sylow(3) + "s of $N$. Thus, the number of " + sylow(3) + "s in $N/Z(N)$ is equal to the number in $N$, which is $4$. Since $N/Z(N)$ has order $12$, we see that it has $8$ elements of order $3$, leaving room for exactly one " + sylow(2) + ". By the correspondence theorem, if we have two " + sylow(2) + "s  $\\tilde P$ and $\\tilde Q$ of $N$, then $\\tilde PZ(N)=\\tilde QZ(N)$. Since $\\tilde P\\lhd\\tilde PZ(N)$ and similarly for $\\tilde Q$, and $\\tilde P$ is the unique " + sylow(2) + " of $\\tilde PZ(N)$, it follows that $\\tilde P=\\tilde Q$. In other words, $N$ has a unique " + sylow(2) + ". So if $S$ is a " + sylow(2) + " of $N$ (and also of $G$), we have $N_G(S)$ has order at least $36$, since $N\\le N_G(S)$, and, for similar reasons to before, must have order exactly $36$. In other words, $N=N_G(S)$. It follows that $n_2=756/36=21$.</p>";
+    var rest3 = "<p>Let $X=\\{N_1,\\dots, N_{21}\\}$ denote the set of normalizers of the $21$ "+ sylow(2) + "s of $G$, and let $H_i=Z(N_i)$. Then $N_i$ centralizes $H_i$, so $N_i\\le C_G(H_i)$. As before, $H_i$ is order $3$. We have also seen that, any subgroup of order $36$ must be maximal, so $N_i=C_G(H_i)=N_G(H_i)$. In particular, if $i\\ne j$, then $H_i\\ne H_j$, lest $N_i=N_G(H_i)=N_G(H_j)=N_j$. Thus, the set $\\{H_1,\\dots,H_{21}\\}$ is the set of $3$-groups which are intersections of " + sylow(3) + "s. Now each $H_i$ is a central $3$-group in $N_i$, and so contained each of the four " + sylow(3) + "s of $N_i$, which have order $9$. A subgroup of order $9$ is contained in a unique " + sylow(3) + " in $G$, so $H_i$ is contained in at least four " + sylow(3) + "s of $G$. Conversely, if $K$ were a " + sylow(3) + " of $G$, Then $K$ would contain a subgroup $K'$ of index $3$ (order $9$). This would force $H_i\\lhd K'$, so $K'\\le N_G(H_i)=N_i$, making $K'$ one of the " + sylow(3) + "s of $N_i$. It follows that for each $i$, $H_i$ is contained in exactly four " + sylow(3) + "s of $G$.</p><p>Let $P_1,\\dots P_{28}$ be the $28$ " + sylow(3) + "s of $G$, and let $\\hat P_i$ denote $P_i\\setminus\\{1\\}$. The claim that each $H_i$ is contained in exactly four " + sylow(3) + "s can be stated as $$\\bigcap\\hat P_i=\\varnothing,$$ for any intersection of at least $5$ such sets. Further, there are exactly $21$ subsets of $4$ elements, one for each $H_i$, such that $\\bigcap\\hat P_i$ is non-empty (where the intersection is over four such sets). Let $\\{i_1,\\dots,i_4\\}$ be indices of the $\\hat P_i$ for such an intersection. Then $\\hat P_{i_1}\\cap\\dots\\cap\\hat P_{i_4}=H_i\\setminus\\{1\\}$. In particular, $$\\displaystyle\\sum_{\\left|I\\right|=4}\\left|\\bigcap_{i\\in I}\\hat P_i\\right|=21\\cdot(3-1)=42.$$</p><p>However, we also know that the intersection of two " + sylow(3) + "s of $G$ has size $1$ or $3$ (and therefore the same for three). Thus, $$\\displaystyle\\sum_{\\left|I\\right|=k}\\left|\\bigcap_{i\\in I}\\hat P_i\\right|=\\binom{4}{k}\\cdot21\\cdot(3-1)=\\binom4k\\cdot42,$$ for $i>1$. We may now apply the inclusion-exclusion principle to see that $$\\left|\\bigcup P_i\\right|=1+\\left|\\bigcup\\hat P_i\\right|=1+28\\cdot (27-1)-\\binom42\\cdot 42+\\binom43\\cdot42-42=603.$$ This means there are $603$ elements of in " + sylow(3) + "s in $G$, leaving room for $103$ more elements, which is not enough for the $216=36\\cdot(7-1)$ non-identity elements in " + sylow(7) + "s. Contradiction.</p>";
 
-    return disclaimer + intro + rest + rest2;
+    return disclaimer + intro + rest + rest2 + rest3;
 }
 
 
