@@ -12,11 +12,11 @@ $(function(){
 
     generateFailList();
 
-    //set the information about NoMSG
+    //set the information about KnowMSG
     $("#about")
     .button({icons: {primary: "ui-icon-info"}})
     .click(function(){
-        sendMessage("About NoMSG", "<h4>What is NoMSG?</h4><p>NoMSG is a proof generator. If you input a positive integer $n$, NoMSG will attempt to find a simple group of order $n$, or generate a proof that no such simple groups exist.</p><h4>How does it work?</h4><p>Magic. But if you want to know more, read about it <a href = \"http://soffer801.wordpress.com/2012/06/23/nomsg-v1-4/\">here</a>.</p><h4>Where did the information come from?</h4><p>Most of the information to construct these proofs can be found on <a href=\"http://en.wikipedia.org/wiki/Sylow_theorems#Fusion_results\">Wikipedia</a>, or any introductory group theory text. For some of the more involved proofs, I adapted proofs from these sources:</p><ul><li>Guillermo Mantilla's <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">notes</a> on group theory.</li><li>Posts from the blog <a href =\"http://crazyproject.wordpress.com/tag/simple-group/\">Project Crazy Project</a>.</li><li><a href = \"http://en.wikipedia.org/wiki/List_of_finite_simple_groups\">This list</a> from Wikipedia.</li></ul><p>and puns on the <a href = \"\">splash page</a> from this friend:</p><ul><li><a href = \"http://www.math.ucla.edu/~jedyang/\">Jed Yang</a></li></ul>");
+        sendMessage("About KnowMSG", "<h4>What is KnowMSG?</h4><p>KnowMSG is a proof generator. If you input a positive integer $n$, KnowMSG will attempt to find a simple group of order $n$, or generate a proof that no such simple groups exist.</p><h4>How does it work?</h4><p>Magic. But if you want to know more, read about it <a href = \"http://soffer801.wordpress.com/2012/06/23/knowmsg-v1-4/\">here</a>.</p><h4>Where did the information come from?</h4><p>Most of the information to construct these proofs can be found on <a href=\"http://en.wikipedia.org/wiki/Sylow_theorems#Fusion_results\">Wikipedia</a>, or any introductory group theory text. For some of the more involved proofs, I adapted proofs from these sources:</p><ul><li>Guillermo Mantilla's <a href = \"http://www.math.wisc.edu/~jensen/Algebra/ThmsGroups.pdf\">notes</a> on group theory.</li><li>Posts from the blog <a href =\"http://crazyproject.wordpress.com/tag/simple-group/\">Project Crazy Project</a>.</li><li><a href = \"http://en.wikipedia.org/wiki/List_of_finite_simple_groups\">This list</a> from Wikipedia.</li></ul><p>and puns on the <a href = \"\">splash page</a> from this friend:</p><ul><li><a href = \"http://www.math.ucla.edu/~jedyang/\">Jed Yang</a></li></ul>");
     });
 
 //------------------------------
