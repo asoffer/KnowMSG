@@ -1,73 +1,42 @@
 <html>
-    <head>
-        <title> KnowMSG | Know More Simple Groups</title>
+  <head>
+    <title> KnowMSG | Know More Simple Groups</title>
+    <script src = "index.js"></script>
+  </head>
+<body>
+  <div id="content">
+      <p id="version"></p>
+      <h1>NoMSG $|$ No More Simple Groups</h1>
+  
+      <div id="toolbar">
+      <input id="input" type="text" value="Pick a number..."
+        onblur="if (this.value == '') {this.value='Pick a number...'; }"
+        onfocus="if (this.value == 'Pick a number...') {this.value='';}" 
+      />
+      <button id="go"
+        onclick="showProof(getInput())"
+      >Go!</button>
+  
+      <button id="about">About KnowMSG</button>
+    </div>
+  
+    <div id="message"></div>
+  
+    <div id="statement">
+      <div id="inner_statement"></div>
+    </div>
 
-        <!-- load mathjax -->
-        <script type="text/javascript" src="mathjax/MathJax.js?config=default"></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-                extensions: ["tex2jax.js","TeX/noUndefined.js"],
-                jax: ["input/TeX","output/HTML-CSS"],
-                tex2jax: {inlineMath: [["$","$"]]},
-                TeX: {extensions: ["AMSmath.js","AMSsymbols.js"]}
-            });
-
-        </script>
-
-
-        <!-- load ui -->
-        <link type="text/css" href="css/smoothness/jquery-ui-1.8.16.custom.css" rel="Stylesheet" />
-        <link type="text/css" href="css/style.css" rel="Stylesheet" />
-
-        <!-- load jquery -->
-        <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-
-        <!-- load everything else -->
-        <script src = "js/List.js"></script>
-        <script src = "js/Option.js"></script>
-        <script src = "js/Prime.js"></script>
-        <script src = "js/Num.js"></script>
-        <script src = "js/Simple.js"></script>
-        <script src = "js/Classification.js"></script>
-        <script src = "js/misc.js"></script>
-        <script src = "js/Proofs.js"></script>
-        <script src = "js/main.js"></script>
-        <script src = "js/technique.js"></script>
-        <!--<script src = "js/nomsg.min.js"></script>-->
-    </head>
-    <body>
-        <div id = "content">
-            <p id = "version"></p>
-            <h1>NoMSG $|$ No More Simple Groups</h1>
-
-            <!-- toolbar -->
-            <div id = "toolbar" class = "ui-widget-header ui-corner-all">
-                <input id = "number_in" type="text" value="Pick a number..." class = "ui-corner-all"
-                onblur="if (this.value == '') {this.value = 'Pick a number...'; }"
-                onfocus="if (this.value == 'Pick a number...') {this.value = '';}" />
-                <!--<input id = "number_in" class = "ui-corner-all">-->
-                <button id = "go">Go!</button>
-
-                <button id = "about">About NoMSG</button>
-            </div>
-
-            <div id = "message" class = "dialog"></div>
-
-            <div id = "statement" class = "ui-widget-header ui-corner-all">
-                <div id = "inner_statement" class = "ui-widget-content ui-corner-all"></div>
-            </div>
-
-            <div id = "proof" class = "ui-widget-content ui-corner-all">
-                <div id = "intro">
-                    <h1>NoMSG is the <a href = "http://en.wikipedia.org/wiki/Ideal_(ring_theory)">ideal</a> tool to <a href = "http://en.wikipedia.org/wiki/Field_(mathematics)">field</a> your group theory questions!</h1>
-                    <p>It's really <a href = "http://en.wikipedia.org/wiki/Simple_group">simple</a>. Pick your favorite positive integer, type it in where it says <i>"Pick a number..."</i> and click <i>"Go!"</i> NoMSG will either <ul><li><p>spit out a proof that no simple groups of that order exist, or</p></li><li><p>find a simple group of that order.</p></li></ul></p>
-                    <p>Simple groups are at the <a href = "http://en.wikipedia.org/wiki/Core_(group)">core</a> of understanding the <a href = "http://en.wikipedia.org/wiki/Content_(algebra)">content</a> of any algebra course. I hope NoMSG <a href = "http://en.wikipedia.org/wiki/Support_(mathematics)">supports</a> your understanding of this <a href = "http://en.wikipedia.org/wiki/Center_(group_theory)">central</a> subject in mathematics.</p>
-                </div>
-            </div>
-
-            <div id = "credits" class = "ui-widget-header ui-corner-all">
-                <table><tr><td align="left"></td><td align="right">Coded and proofs by <a href = "http://www.math.ucla.edu/~asoffer">Andy Soffer</a></td></tr></table>
-            </div>
-        </body>
-    </html>
+    <div id="proof">
+      <div id="intro">
+        <h1>KnowMSG is the <a href="http://en.wikipedia.org/wiki/Ideal_(ring_theory)">ideal</a> tool to <a href="http://en.wikipedia.org/wiki/Field_(mathematics)">field</a> your group theory questions!</h1>
+        <p>It's really <a href="http://en.wikipedia.org/wiki/Simple_group">simple</a>. Pick your favorite positive integer, type it in where it says <em>"Pick a number..."</em> and click <em>"Go!"</em> KnowMSG will either 
+          <ul>
+            <li><p>spit out a proof that no simple groups of that order exist, or</p></li>
+            <li><p>find a simple group of that order.</p></li>
+          </ul>
+        </p>
+        <p>Simple groups are at the <a href="http://en.wikipedia.org/wiki/Core_(group)">core</a> of understanding the <a href="http://en.wikipedia.org/wiki/Content_(algebra)">content</a> of any algebra course. I hope KnowMSG <a href="http://en.wikipedia.org/wiki/Support_(mathematics)">supports</a> your understanding of this <a href="http://en.wikipedia.org/wiki/Center_(group_theory)">central</a> subject in mathematics.</p>
+      </div>
+    </div>
+  </body>
+</html>
