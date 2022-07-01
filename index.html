@@ -1,7 +1,8 @@
 <html>
   <head>
+    <meta charset="UTF-8">
     <title> KnowMSG | Know More Simple Groups</title>
-    <script src = "index.js"></script>
+    <script src="index.js" type="module"></script>
   </head>
 <body>
   <div id="content">
@@ -13,9 +14,7 @@
         onblur="if (this.value == '') {this.value='Pick a number...'; }"
         onfocus="if (this.value == 'Pick a number...') {this.value='';}" 
       />
-      <button id="go"
-        onclick="showProof(getInput())"
-      >Go!</button>
+      <button id="prove">Go!</button>
   
       <button id="about">About KnowMSG</button>
     </div>

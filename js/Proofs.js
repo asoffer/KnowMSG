@@ -8,10 +8,6 @@ function pf_let(n){
 
 pf_contradiction = "Assume for the sake of contradiction that $G$ is simple. ";
 
-function pf_prime(p){
-    return "<p>" + pf_let(p) + "Lagrange's theorem tells us that the order of every subgroup group of $G$ divides $" + p + "$. Since $" + p + "$ is prime, the only subgroups are the trivial group and $G$ itself, so these are the only normal subgroups as well. Hence, $G$ is simple.</p><p>Moreover, up to isomorphism, the only group of order $" + p + "$ is the cyclic group $" + zmod(p) + "$.</p>";
-}
-
 function pf_prime_power(p,ppow){
     return "<p>" + pf_let(ppow) + "By the class equation, $$\\left|G\\right|=\\left|Z(G)\\right|+\\sum_{g\\in O^*}[G:C_G(g)].$$ Since $\\left|G\\right|$ is divisible by $" + p + "$, as is the sum, it follows that $\\left|Z(G)\\right|$ is divisible by $" + p + "$. So either $Z(G)=G$, meaning $G$ is abelian and therefore not simple, or $Z(G)\\lhd G$.</p>"
 }

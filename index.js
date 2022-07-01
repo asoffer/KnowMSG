@@ -1,61 +1,4 @@
-function factor(n) {
-  let result = {};
-  for (let i = BigInt(2); i * i < n; ++i) {
-    if (n % i == 0) {
-      n /= i;
-      if (result[i] === undefined) {
-        result[i] = BigInt(1);
-      } else {
-        ++result[i];
-      }
-    }
-  }
-
-  if (n != 1) {
-    if (result[n] === undefined) {
-      result[n] = BigInt(1);
-    } else {
-      ++result[n];
-    }
-  }
-  return result;
-}
-
-class Factorization {
-  constructor(number) {
-    this._factorization = factor(number);
-  }
-
-  primeFactors() {
-    return Object.entries(this._factorization).map(
-      (key, value) => ({prime: BigInt(key), exponent: value}));
-  }
-
-  divideBy(f) {
-    for (const prime of Object.keys(f)) {
-      this._factorization[prime] -= f[prime];
-      if (this._factorization[prime] == 0) {
-        delete this._factorization[prime];
-      }
-    }
-  }
-
-  allFactors() {
-    let result = [1];
-    for ({prime: p, exponent: e} of this.primeFactors()) {
-      const newResults = results;
-      for (let i = BigInt(0); i < e; ++i) {
-        newResults = newResults.concat(result.map(x => x * (p ** e)));
-      }
-      results = newResults;
-    }
-    return result;
-  }
-};
-
-function getInput() {
-  return BigInt(document.getElementById("input").value);
-}
+import {Factorization} from "./factorization.js"
 
 function constructGroupOrder(n) {
   return {
@@ -126,18 +69,35 @@ function isSporadicGroup(groupOrder) {
     { name: "the Baby Monster group", symbol: "B", order: BigInt("4154781481226426191177580544000000"), },
     { name: "the Fischer-Griess Monster, or the monster group", symbol: "M", order: BigInt("808017424794512875886459904961710757005754368000000000"), },
   ];
-  for (group of sporadicGroups) {
+  for (const group of sporadicGroups) {
     if (group.order == groupOrder.order) {
-      return "";
+      return `
+      <p>
+      The group $${group.symbol}$, ${group.name}, is a simple group of order $${group.order}$.
+      </p>
+      `;
     }
   }
   return null;
 }
 
 function hasPrimeOrder(groupOrder) {
-  const primeFactorCount = factored(groupOrder);
-  if (primeFactorCount == 1) {
-    return "";
+  const primeFactors = factored(groupOrder).primeFactors();
+  if (primeFactors.length == 1 && primeFactors[0].exponent == 1) {
+    return `
+    <p>
+    Let $G$ be a group of order $${groupOrder.order}$. Lagrange's theorem tells
+    us that the order of every subgroup group of $G$ divides
+    $${groupOrder.order}$. Because $${groupOrder.order}$ is prime, the 
+    only subgroups are the trivial group and $G$ itself, so these are the only 
+    normal subgroups as well. Hence, $G$ is simple.
+    </p>
+
+    <p>
+    Moreover, up to isomorphism, the only group of order $${groupOrder.order}$ 
+    is the cyclic group $\\mathbb{Z}/p\\mathbb{Z}$.
+    </p>
+    `;
   }
   return null;
 }
@@ -149,24 +109,40 @@ function isSimpleByClassificationTheorem(groupOrder) {
 
 function orderIsTwoModuloFour(groupOrder) {
   if (groupOrder.order >= 5 && groupOrder.order % BigInt(4) == 2) {
-    return "";
+    return `
+    <p>
+    Let $G$ be a group of order $${groupOrder.order}$. By Cauchy's theorem, 
+    $G$ has an element $g$ of order $2$. Because $G$ acts on itself by (left) 
+    multiplication, there exists an injective homomorphism,
+    $\\varphi: G \\to S_{\\left|G\\right|}$.
+    </p>
+
+    <p>
+    Consider the cycle structure of $\\varphi(g)$. Because $g$ has order $2$,
+    $\\varphi(g)$ must be the product of $2$-cycles. Moreover, $\\varphi(g)$
+    cannot have any fixed points: A fixed point would correspond to an element
+    $x\\in G$ for which $gx=g$, but $g$ is not the identity element. This means
+    that $\\varphi(g)$ is the product of exactly $${groupOrder.order/BigInt(2)}$
+    two-cycles.
+    </p>
+
+    <p>
+    A two-cycle is an odd permutation, and the product of an odd number of odd 
+    permutations is also an odd permutation. Thus,
+    $\\varphi(g)\\not\\in A_{\\left|G\\right|}.
+    Because $A_{\\left|G\\right|}\\unlhd S_{\\left|G\\right|}$, we know that 
+    $\\varphi(G)\\cap A_{\\left|G\\right|}\\unlhd \\varphi(G)$ and has index at 
+    most two. Moreover, $\\varphi(g)$ is an element of $\\varphi(G)$ which is 
+    not in the intersection, so we have produced a normal proper subgroup of 
+    index two. Because $\\varphi(G)$ is isomorphic to $G$, there is a corresponding
+    normal subgroup of $G$ and therefore $G$ is not simple.
+    </p>
+    `;
   }
   return null;
 }
 
-function sylow(groupOrder) {
-
-  n.ptr = n.primes.head.next
-        while(n.ptr != n.primes.head){
-            if(n.ptr.data.np.size == 1)
-                return true;
-            n.ptr = n.ptr.next;
-        }
-
-    return false;
-}
-
-function showProof(n) {
+export function showProof(n) {
   const groupOrder = constructGroupOrder(n);
 
   const techniques = [
@@ -177,9 +153,22 @@ function showProof(n) {
     orderIsTwoModuloFour,
   ];
 
-  for (technique of techniques) {
+  for (const technique of techniques) {
     const result = technique(groupOrder);
-    if (result === null) { console.log("p4ass"); continue; }
-    console.log(result);
+    if (result === null) {
+      continue;
+    } else {
+      document.getElementById("proof").innerHTML = result;
+      return;
+    }
   }
+  console.log("failed entirely.");
 }
+
+(function() {
+  const proveButton = document.getElementById("prove");
+  proveButton.onclick = () => {
+    const value = document.getElementById("input").value;
+    showProof(BigInt(value));
+  };
+})();
