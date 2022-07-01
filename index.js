@@ -15,6 +15,29 @@ function factored(groupOrder) {
   return groupOrder.factoredOrder;
 }
 
+function renderMath(element) {
+  if (element.children.length == 0) {
+    element.innerHTML = 
+      element
+      .textContent
+      .split("$")
+      .map((text, index) => {
+        if (index % 2 == 0) {
+          return text;
+        } else {
+          return katex.renderToString(text, {
+            throwOnError: false
+          });
+        }
+      })
+      .join("");
+  } else {
+    for (const e of element.children) {
+      renderMath(e);
+    }
+  }
+}
+
 function sylowSubgroupCountOptions(groupOrder) {
   function countSylowSubgroupOptions() {
     result = {};
@@ -36,7 +59,15 @@ function sylowSubgroupCountOptions(groupOrder) {
 }
 
 function isOne(groupOrder) {
-  if (groupOrder.order == 1) { return ""; }
+  if (groupOrder.order == 1) {
+    return `
+    <p>
+    The trivial group is the only group on one element, and has no proper 
+    subgroup, let alone non-trivial normal ones, so it is vacuously simple.
+    </p>
+    `; 
+  }
+
   return null;
 }
 
@@ -95,7 +126,7 @@ function hasPrimeOrder(groupOrder) {
 
     <p>
     Moreover, up to isomorphism, the only group of order $${groupOrder.order}$ 
-    is the cyclic group $\\mathbb{Z}/p\\mathbb{Z}$.
+    is the cyclic group $\\mathbb{Z}/${groupOrder.order}\\mathbb{Z}$.
     </p>
     `;
   }
@@ -129,7 +160,7 @@ function orderIsTwoModuloFour(groupOrder) {
     <p>
     A two-cycle is an odd permutation, and the product of an odd number of odd 
     permutations is also an odd permutation. Thus,
-    $\\varphi(g)\\not\\in A_{\\left|G\\right|}.
+    $\\varphi(g)\\not\\in A_{\\left|G\\right|}$.
     Because $A_{\\left|G\\right|}\\unlhd S_{\\left|G\\right|}$, we know that 
     $\\varphi(G)\\cap A_{\\left|G\\right|}\\unlhd \\varphi(G)$ and has index at 
     most two. Moreover, $\\varphi(g)$ is an element of $\\varphi(G)$ which is 
@@ -158,7 +189,9 @@ export function showProof(n) {
     if (result === null) {
       continue;
     } else {
-      document.getElementById("proof").innerHTML = result;
+      const proofElement = document.getElementById("proof");
+      proofElement.innerHTML = result;
+      renderMath(proofElement);
       return;
     }
   }
