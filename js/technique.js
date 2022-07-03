@@ -276,14 +276,6 @@ TechSymDiv.proof = function(n, p, np){
 }
 
 
-TechTwoOdd = new Technique("2^1*m", true);
-TechTwoOdd.test = function(n){
-    return n % 4 == 2;
-}
-TechTwoOdd.proof = function(n){
-    return "<p>Let $G$ be a group of order $" + n + "$. By Cauchy's theorem, $G$ has has an element $g$ of order $2$. As $G$ acts on itself by left multiplication, we have a map $\\phi: G\\to S_{\\left|G\\right|}$. This map by definition is injective, so $\\phi(G)\\cong G$. Since $\\phi(g)$ also has order 2, it must be the product of disjoint $2$-cycles. Furthermore, only the identity $\\phi(e)$ has any fixed points under this action, because $hx=x$, for $h,x\\in G$ means that $h=e$. Thus, $\\phi(g)$ must be the product of $" + (n >> 1) + "$ $2$-cycles. Since a $2$-cycle is an odd permutation, and $\\phi(g)$ is the product of an odd number of them, $\\phi(g)$ must be an odd permutation. That is, $\\phi(G)\\not\\subseteq A_{" + n + "}$. In particular, since $A_{" + n + "}\\lhd S_{" + n + "}$, we know that $\\phi(G)\\cap A_{" + n + "}\\lhd \\phi(G)$, meaning that $\\phi(G)$, and therefore $G$, is not simple.</p>";
-}
-
 TechNormInSym = new Technique("element size from Normalizer carefully");
 TechNormInSym.test = function(n, p, np){
     var norm = new Num(n.n/np.np);
@@ -333,20 +325,6 @@ TechNormInSym.proof = function(n, p, np){
     var x = new Num(n.n/np.np);
     return "<p>Let $P_{" + p + "}$ be a " + sylow(p) + ", and let $P_{" + np.ptr.data.p + "}$ be a " + sylow(np.ptr.data.p) + ". The normalizer $N_G(P_{" + p + "})$ has order $" + n.n/np.np + "$, and therefore must be cyclic, so we can pick $g\\in G$ to be an element of order $" + n.n/np.np + "$. Since $" + n.n/np.np + "$ does not divide $\\left|N_G(P_{" + np.ptr.data.p + "})\\right|=" + n + "/n_{" + np.ptr.data.p + "}=" + (n/np.ptr.data.smallestNP()) + "$, the group element $g$ cannot normalize $P_{" + np.ptr.data.p + "}$, nor any other " + sylow(np.ptr.data.p) + ". Thus, if we identify $g$ with its action on the $" + np.ptr.data.smallestNP() + "$ " + sylow(np.ptr.data.p) + ", we see that we have produced an element in $S_{" + np.ptr.data.smallestNP() + "}$ of order $" + n.n/np.np + "$ which has no fixed points.</p><p>Consider the cycle structure of $g$. If we say that $g$ has $a$ $" + x.primes.first().p + "$-cycles, and $b$ $" + x.primes.last().p + "$-cycles, we would need to find a solution to the Diophantine equation $$" + x.primes.first().p + "a+" + x.primes.last().p + "b=" + np.ptr.data.smallestNP() + ",$$ with $a,b&gt;0$. It is routine to check that no such solution exists.</p>";
 }
-
-TechOne = new Technique("is it one?", true, 1);
-TechOne.test = function(n){ return n == 1 }
-TechOne.proof = function(n){ return "<p>The trivial group is the only group on one element, and has no proper subgroup, let alone non-trivial normal ones, so it is vacuously simple.</p>"; }
-
-TechSporadic = new Technique("is it a sporadic group", true, 1);
-//TechSporadic.test = sporadicTest;
-
-TechSimple = new Technique("classification theorem", true);
-TechSimple.test = null;
-
-TechPrimes = new Technique("prime or prime power", true, 2);
-TechPrimes.test = function(n){ return (n.isPrime() || n.isPrimePower()); }
-TechPrimes.proof = function(n){ return (n.isPrime() ? pf_prime(n.n)+(n.n == 2 ? "<center><div id = \"fsg\" class = \"ui-corner-all\"><iframe width=\"420\" height=\"315\" src=\"http://www.youtube.com/embed/UTby_e4-Rhg?autoplay=1\" frameborder=\"0\" allowfullscreen></iframe><br>Finite Simple Group (of Order Two)<br><a href = \"http://www.casa.org/node/2044\">Klein Four Group</a></div></center>" : "") : pf_prime_power(n.primes.first().p, n.n)); }
 
 TechSylow = new Technique("does n_p only have one option", true);
 TechSylow.test = function(n){

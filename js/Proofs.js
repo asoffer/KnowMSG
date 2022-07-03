@@ -8,10 +8,6 @@ function pf_let(n){
 
 pf_contradiction = "Assume for the sake of contradiction that $G$ is simple. ";
 
-function pf_prime_power(p,ppow){
-    return "<p>" + pf_let(ppow) + "By the class equation, $$\\left|G\\right|=\\left|Z(G)\\right|+\\sum_{g\\in O^*}[G:C_G(g)].$$ Since $\\left|G\\right|$ is divisible by $" + p + "$, as is the sum, it follows that $\\left|Z(G)\\right|$ is divisible by $" + p + "$. So either $Z(G)=G$, meaning $G$ is abelian and therefore not simple, or $Z(G)\\lhd G$.</p>"
-}
-
 function pf_one_mod_p(n,p){
     var textPow = "";
     if(p.pow > 1)

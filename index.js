@@ -112,10 +112,47 @@ function isSporadicGroup(groupOrder) {
   return null;
 }
 
-function hasPrimeOrder(groupOrder) {
+function burnsidesTheorem(groupOrder) {
+  const primeFactors = factored(groupOrder).primeFactors();
+  if (primeFactors.length == 2) {
+    return `
+    <p>
+    Burnside's Theorem states that for primes $p$ and $q$, and positive integers
+    $a$ and $b$, all groups of order $p^aq^b$ are solvable. Because
+    $${groupOrder.order}$ is the product of two prime powers an group of this 
+    order must be solvable, and therefore not simple.
+    </p>
+
+    <p>
+    Know a more elementary proof? <a href="https://github.com/asoffer/KnowMSG/issues">File an issue!</a>
+    </p>
+    `;
+  }
+  return null;
+}
+
+function feitThompsonTheorem(groupOrder) {
+  if (groupOrder.order % BigInt(2) == 1) {
+    return `
+    <p>
+    The Feit-Thompson Theorem says that all groups of odd order are solvable. 
+    A solvable simple group must be of prime order. Because
+    $${groupOrder.order}$ is not prime, no group of order $${groupOrder.order}$
+    is simple.
+    </p>
+
+    <p>
+    Know a more elementary proof? <a href="https://github.com/asoffer/KnowMSG/issues">File an issue!</a>
+    </p>
+    `;
+  }
+  return null;
+}
+
+function isPrime(groupOrder) {
   const primeFactors = factored(groupOrder).primeFactors();
   if (primeFactors.length == 1 && primeFactors[0].exponent == 1) {
-    return `
+    let proof = `
     <p>
     Let $G$ be a group of order $${groupOrder.order}$. Lagrange's theorem tells
     us that the order of every subgroup group of $G$ divides
@@ -127,6 +164,40 @@ function hasPrimeOrder(groupOrder) {
     <p>
     Moreover, up to isomorphism, the only group of order $${groupOrder.order}$ 
     is the cyclic group $\\mathbb{Z}/${groupOrder.order}\\mathbb{Z}$.
+    </p>
+    `;
+    if (groupOrder.order == 2) {
+      proof += `
+        <iframe width="420" height="315" 
+         src="http://www.youtube.com/embed/UTby_e4-Rhg?autoplay=1" 
+         frameborder="0" allowfullscreen></iframe>
+      `;
+    }
+    return proof;
+  }
+  return null;
+}
+
+function isPrimePower(groupOrder) {
+  const primeFactors = factored(groupOrder).primeFactors();
+  if (primeFactors.length == 1) {
+    const prime = primeFactors[0].prime;
+    return `
+    <p>
+    Let $G$ be a group of order $${groupOrder.order}$. By the class equation,
+    </p>
+    <center>
+      $\\left|G\\right|=\\left|Z(G)\\right|+\\sum_{g\\in O^*}[G:C_G(g)].$
+    </center>
+
+    <p>
+    We know that $\\left|G\\right|$ is divisible by the prime $${prime}$.
+    Moreover each term in the summation is an index of a subgroup of $G$
+    which must therefore be divisible by $${prime}$ making the entire
+    summation divisible by $${prime}$. It follows that $\\left|Z(G)\\right|$
+    must also be divisible by $${prime}$. Thus either $Z(G)=G$, meaning $G$ is 
+    abelian and therefore not simple, or $Z(G)$ is a proper normal subgroup of
+    $G$, again implying that $G$ must not be simple.
     </p>
     `;
   }
@@ -179,9 +250,12 @@ export function showProof(n) {
   const techniques = [
     isOne,
     isSporadicGroup,
-    hasPrimeOrder,
+    isPrime,
+    isPrimePower,
     isSimpleByClassificationTheorem,
     orderIsTwoModuloFour,
+    burnsidesTheorem,
+    feitThompsonTheorem,
   ];
 
   for (const technique of techniques) {
@@ -195,7 +269,6 @@ export function showProof(n) {
       return;
     }
   }
-  console.log("failed entirely.");
 }
 
 (function() {
